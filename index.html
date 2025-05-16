@@ -2,257 +2,202 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Mapa Conceptual - Modelos de Negocio</title>
+  <title>Mapa Conceptual con Guardado</title>
   <script src="https://unpkg.com/gojs@2.3.15/release/go.js"></script>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #f2f6fc;
+      background: #f1f5fa;
       margin: 0;
       padding: 0;
     }
     header {
       background: #004aad;
       color: white;
-      text-align: center;
       padding: 1rem;
+      text-align: center;
     }
     nav {
       display: flex;
       justify-content: center;
-      background: #e6eefc;
+      background: #eaf0fb;
       padding: 1rem;
       gap: 1rem;
     }
     nav button {
       padding: 0.5rem 1rem;
       border: none;
-      background: #cce0ff;
-      font-weight: bold;
       border-radius: 6px;
       cursor: pointer;
+      background: #d0e4ff;
+      font-weight: bold;
     }
     nav button:hover {
-      background: #aacbff;
+      background: #a8cfff;
+    }
+    .controls {
+      text-align: center;
+      padding: 1rem;
+      background: #fff;
+    }
+    .controls button {
+      margin: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #004aad;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
     }
     #diagramDiv {
       width: 100%;
       height: 80vh;
       border-top: 2px solid #ccc;
-      position: relative;
-    }
-    .controls {
-      text-align: center;
-      padding: 1rem;
-    }
-    .controls button {
-      background: #004aad;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      margin: 0.5rem;
-    }
-    /* Popup modal estilos */
-    #descPopup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
-      padding: 1.5rem;
-      max-width: 350px;
-      display: none;
-      z-index: 1000;
-    }
-    #descPopup p {
-      margin: 0 0 1rem 0;
-    }
-    #descPopup button {
-      background: #004aad;
-      color: white;
-      border: none;
-      padding: 0.4rem 0.8rem;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    #overlay {
-      position: fixed;
-      top:0; left:0; right:0; bottom:0;
-      background: rgba(0,0,0,0.3);
-      display: none;
-      z-index: 900;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>🧠 Mapa Conceptual Interactivo - Modelos de Negocio</h1>
-  </header>
+<header>
+  <h1>🧠 Mapa Conceptual Interactivo - Modelos de Negocio</h1>
+</header>
 
-  <nav>
-    <button onclick="loadModel('disruptivo')">💡 Disruptivo</button>
-    <button onclick="loadModel('cola')">📦 Cola Larga</button>
-    <button onclick="loadModel('plataforma')">🌐 Plataforma Multilateral</button>
-  </nav>
+<nav>
+  <button onclick="loadModel('disruptivo')">💡 Disruptivo</button>
+  <button onclick="loadModel('cola')">📦 Cola Larga</button>
+  <button onclick="loadModel('plataforma')">🌐 Plataforma Multilateral</button>
+</nav>
 
-  <div class="controls">
-    <button onclick="saveAsImage()">📸 Exportar como Imagen</button>
-    <button onclick="window.print()">🖨️ Imprimir como PDF</button>
-  </div>
+<div class="controls">
+  <button onclick="saveLayout()">💾 Guardar Mapa</button>
+  <button onclick="saveAsImage()">📸 Exportar como Imagen</button>
+  <button onclick="window.print()">🖨️ Imprimir como PDF</button>
+</div>
 
-  <div id="diagramDiv"></div>
+<div id="diagramDiv"></div>
 
-  <!-- Popup para mostrar descripción -->
-  <div id="overlay"></div>
-  <div id="descPopup">
-    <p id="descText"></p>
-    <button onclick="closePopup()">Cerrar</button>
-  </div>
+<script>
+  const $ = go.GraphObject.make;
+  const diagram = $(go.Diagram, "diagramDiv", {
+    layout: $(go.ForceDirectedLayout),
+    "undoManager.isEnabled": true
+  });
 
-  <script>
-    const $ = go.GraphObject.make;
-    const diagram = $(go.Diagram, "diagramDiv", {
-      layout: $(go.ForceDirectedLayout),
-      "undoManager.isEnabled": true
-    });
-
-    diagram.nodeTemplate =
-      $(go.Node, "Auto",
-        {
-          resizable: true, resizeObjectName: "SHAPE",
-          click: (e, node) => {
-            // Solo clic: mostrar descripción en popup
-            if (e.clickCount === 1) {
-              showDescription(node.data);
-            }
-          },
-          doubleClick: (e, node) => {
-            // Doble clic: editar descripción
-            e.diagram.currentTool.doCancel(); // prevenir zoom/doble clic default
-            const nota = prompt("Edita la descripción:", node.data.desc || "");
-            if (nota !== null) {
-              diagram.model.startTransaction("edit");
-              diagram.model.setDataProperty(node.data, "desc", nota);
-              diagram.model.commitTransaction("edit");
-              localStorage.setItem(node.data.key, nota);
-              closePopup();
-            }
+  // Nodo con descripción visible
+  diagram.nodeTemplate =
+    $(go.Node, "Auto",
+      {
+        doubleClick: (e, node) => {
+          const nuevaDesc = prompt("Editar descripción:", node.data.desc || "");
+          if (nuevaDesc !== null) {
+            diagram.model.startTransaction("update");
+            diagram.model.setDataProperty(node.data, "desc", nuevaDesc);
+            diagram.model.commitTransaction("update");
           }
-        },
-        $(go.Shape, "RoundedRectangle",
-          { name: "SHAPE", fill: "#e6f0ff", stroke: "#004aad", strokeWidth: 2 }),
+        }
+      },
+      $(go.Shape, "RoundedRectangle",
+        { fill: "#e6f0ff", stroke: "#004aad", strokeWidth: 2 }),
+      $(go.Panel, "Vertical",
         $(go.TextBlock,
-          { margin: 8, font: "bold 13px sans-serif", editable: false },
-          new go.Binding("text", "text"))
-      );
+          { margin: 6, font: "bold 14px sans-serif", stroke: "#004aad", textAlign: "center" },
+          new go.Binding("text", "text")),
+        $(go.TextBlock,
+          { margin: new go.Margin(2, 6, 6, 6), wrap: go.TextBlock.WrapFit, width: 200, stroke: "#333" },
+          new go.Binding("text", "desc"))
+      )
+    );
 
-    diagram.linkTemplate =
-      $(go.Link,
-        { routing: go.Link.AvoidsNodes, corner: 5 },
-        $(go.Shape),
-        $(go.Shape, { toArrow: "Standard" })
-      );
+  diagram.linkTemplate =
+    $(go.Link,
+      { routing: go.Link.AvoidsNodes, corner: 5 },
+      $(go.Shape),
+      $(go.Shape, { toArrow: "Standard" })
+    );
 
-    // Popup y overlay control
-    const popup = document.getElementById('descPopup');
-    const overlay = document.getElementById('overlay');
-    const descText = document.getElementById('descText');
-
-    function showDescription(data) {
-      descText.textContent = data.desc || "Sin descripción disponible.";
-      popup.style.display = 'block';
-      overlay.style.display = 'block';
+  const modelos = {
+    disruptivo: {
+      nodeDataArray: [
+        { key: "D0", text: "💡 Modelo Disruptivo", desc: "Rompe esquemas tradicionales con tecnología." },
+        { key: "D1", text: "🚀 Características", desc: "Transformación cultural, innovación acelerada, nuevas demandas." },
+        { key: "D2", text: "🤖 Tecnologías", desc: "IA, IoT, Blockchain." },
+        { key: "D3", text: "🔄 Sin Intermediarios", desc: "Contacto directo con consumidores." },
+        { key: "D4", text: "📈 Competencia", desc: "Estimula competencia y nuevos mercados." },
+        { key: "D5", text: "🏢 Ejemplos", desc: "Spotify, Uber, Amazon, Sharoo." }
+      ],
+      linkDataArray: [
+        { from: "D0", to: "D1" },
+        { from: "D0", to: "D2" },
+        { from: "D0", to: "D3" },
+        { from: "D0", to: "D4" },
+        { from: "D0", to: "D5" }
+      ]
+    },
+    cola: {
+      nodeDataArray: [
+        { key: "C0", text: "📦 Modelo Cola Larga", desc: "Vende productos poco demandados, pero muchos." },
+        { key: "C1", text: "📊 Rompe Pareto", desc: "Importancia del 80% de productos menos vendidos." },
+        { key: "C2", text: "🌐 Internet", desc: "Permite visibilidad de variedad infinita." },
+        { key: "C3", text: "💸 Costos Bajos", desc: "Menor distribución/almacenamiento físico." },
+        { key: "C4", text: "🎯 Nichos", desc: "Se adapta a gustos minoritarios." },
+        { key: "C5", text: "🏢 Ejemplos", desc: "Amazon, Netflix, LEGO." }
+      ],
+      linkDataArray: [
+        { from: "C0", to: "C1" },
+        { from: "C0", to: "C2" },
+        { from: "C0", to: "C3" },
+        { from: "C0", to: "C4" },
+        { from: "C0", to: "C5" }
+      ]
+    },
+    plataforma: {
+      nodeDataArray: [
+        { key: "P0", text: "🌐 Plataforma Multilateral", desc: "Conecta grupos interdependientes." },
+        { key: "P1", text: "👥 Interacción", desc: "Usuarios, creadores, clientes se conectan." },
+        { key: "P2", text: "📡 Efecto Red", desc: "Más usuarios, más valor para todos." },
+        { key: "P3", text: "💰 Costos Bajos", desc: "No requiere fabricar o almacenar." },
+        { key: "P4", text: "📈 Escalable", desc: "Puede crecer de forma exponencial." },
+        { key: "P5", text: "🏢 Ejemplos", desc: "Uber, Airbnb, eBay, Facebook." }
+      ],
+      linkDataArray: [
+        { from: "P0", to: "P1" },
+        { from: "P0", to: "P2" },
+        { from: "P0", to: "P3" },
+        { from: "P0", to: "P4" },
+        { from: "P0", to: "P5" }
+      ]
     }
-    function closePopup() {
-      popup.style.display = 'none';
-      overlay.style.display = 'none';
-    }
-    overlay.addEventListener('click', closePopup);
+  };
 
-    // Modelos con datos (información completa del PDF y emojis)
-    const modelos = {
-      disruptivo: {
-        nodeDataArray: [
-          { key: "D0", text: "💡 Modelo Disruptivo", desc: "Rompe esquemas tradicionales con tecnología." },
-          { key: "D1", text: "🚀 Características", desc: "Transformación cultural, innovación acelerada, nuevas demandas." },
-          { key: "D2", text: "🤖 Tecnologías", desc: "IA, IoT, Blockchain." },
-          { key: "D3", text: "🔄 Eliminación de Intermediarios", desc: "Facilita el contacto directo con el consumidor." },
-          { key: "D4", text: "📈 Estimula la Competencia", desc: "Cambia las reglas del juego en el mercado." },
-          { key: "D5", text: "🏢 Ejemplos", desc: "Spotify, Netflix, Uber, Amazon, Sharoo." }
-        ],
-        linkDataArray: [
-          { from: "D0", to: "D1" },
-          { from: "D0", to: "D2" },
-          { from: "D0", to: "D3" },
-          { from: "D0", to: "D4" },
-          { from: "D0", to: "D5" }
-        ]
-      },
+  let modeloActual = "disruptivo";
 
-      cola: {
-        nodeDataArray: [
-          { key: "C0", text: "📦 Modelo Cola Larga", desc: "Vende muchos productos de baja demanda." },
-          { key: "C1", text: "📊 Rompe Pareto", desc: "80% de los ingresos no proviene solo del 20%." },
-          { key: "C2", text: "🌐 Internet", desc: "Permite alcance y diversidad global." },
-          { key: "C3", text: "💸 Costos Bajos", desc: "Distribución/almacenamiento digital." },
-          { key: "C4", text: "🎨 Personalización", desc: "Adaptado a nichos minoritarios." },
-          { key: "C5", text: "🏢 Ejemplos", desc: "Amazon (libros), Netflix (indie), LEGO (kits personalizados)." }
-        ],
-        linkDataArray: [
-          { from: "C0", to: "C1" },
-          { from: "C0", to: "C2" },
-          { from: "C0", to: "C3" },
-          { from: "C0", to: "C4" },
-          { from: "C0", to: "C5" }
-        ]
-      },
+  function loadModel(nombre) {
+    modeloActual = nombre;
+    const saved = localStorage.getItem("modelo_" + nombre);
+    diagram.model = go.Model.fromJson(saved || modelos[nombre]);
+  }
 
-      plataforma: {
-        nodeDataArray: [
-          { key: "P0", text: "🌐 Modelo Plataforma", desc: "Conecta grupos interdependientes para generar valor." },
-          { key: "P1", text: "👥 Interacción", desc: "Segmentos que se benefician unos de otros." },
-          { key: "P2", text: "📡 Efecto Red", desc: "Más usuarios = más valor." },
-          { key: "P3", text: "💰 Costos Bajos", desc: "No requiere fabricar o almacenar productos." },
-          { key: "P4", text: "📈 Escalabilidad", desc: "Puede crecer rápidamente." },
-          { key: "P5", text: "🏢 Ejemplos", desc: "Amazon, eBay, Airbnb, Uber, Facebook, Instagram." }
-        ],
-        linkDataArray: [
-          { from: "P0", to: "P1" },
-          { from: "P0", to: "P2" },
-          { from: "P0", to: "P3" },
-          { from: "P0", to: "P4" },
-          { from: "P0", to: "P5" }
-        ]
-      }
-    };
+  function saveLayout() {
+    diagram.nodes.each(node => {
+      const pos = node.location;
+      diagram.model.setDataProperty(node.data, "loc", go.Point.stringify(pos));
+    });
+    const json = diagram.model.toJson();
+    localStorage.setItem("modelo_" + modeloActual, json);
+    alert("🧠 Mapa guardado correctamente.");
+  }
 
-    function loadModel(tipo) {
-      diagram.model = go.Model.fromJson(modelos[tipo]);
-      diagram.nodes.each(node => {
-        const nota = localStorage.getItem(node.data.key);
-        if (nota) diagram.model.setDataProperty(node.data, "desc", nota);
-      });
-      closePopup();
-    }
+  function saveAsImage() {
+    const img = diagram.makeImageData({ scale: 1, background: "white" });
+    const link = document.createElement("a");
+    link.download = "mapa_" + modeloActual + ".png";
+    link.href = img;
+    link.click();
+  }
 
-    function saveAsImage() {
-      const img = diagram.makeImageData({ scale: 1, background: "white" });
-      const link = document.createElement("a");
-      link.download = "mapa_modelo.png";
-      link.href = img;
-      link.click();
-    }
-
-    // Carga inicial
-    loadModel("disruptivo");
-  </script>
+  // Cargar automáticamente el primero
+  loadModel(modeloActual);
+</script>
 
 </body>
 </html>
-
-
