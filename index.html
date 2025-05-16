@@ -39,6 +39,7 @@
       width: 100%;
       height: 80vh;
       border-top: 2px solid #ccc;
+      position: relative;
     }
     .controls {
       text-align: center;
@@ -52,6 +53,38 @@
       border-radius: 6px;
       cursor: pointer;
       margin: 0.5rem;
+    }
+    /* Popup modal estilos */
+    #descPopup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+      padding: 1.5rem;
+      max-width: 350px;
+      display: none;
+      z-index: 1000;
+    }
+    #descPopup p {
+      margin: 0 0 1rem 0;
+    }
+    #descPopup button {
+      background: #004aad;
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #overlay {
+      position: fixed;
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.3);
+      display: none;
+      z-index: 900;
     }
   </style>
 </head>
@@ -74,6 +107,13 @@
 
   <div id="diagramDiv"></div>
 
+  <!-- Popup para mostrar descripción -->
+  <div id="overlay"></div>
+  <div id="descPopup">
+    <p id="descText"></p>
+    <button onclick="closePopup()">Cerrar</button>
+  </div>
+
   <script>
     const $ = go.GraphObject.make;
     const diagram = $(go.Diagram, "diagramDiv", {
@@ -85,24 +125,29 @@
       $(go.Node, "Auto",
         {
           resizable: true, resizeObjectName: "SHAPE",
-          doubleClick: function (e, node) {
-            const nota = prompt("Escribe una nota personal:", node.data.desc || "");
+          click: (e, node) => {
+            // Solo clic: mostrar descripción en popup
+            if (e.clickCount === 1) {
+              showDescription(node.data);
+            }
+          },
+          doubleClick: (e, node) => {
+            // Doble clic: editar descripción
+            e.diagram.currentTool.doCancel(); // prevenir zoom/doble clic default
+            const nota = prompt("Edita la descripción:", node.data.desc || "");
             if (nota !== null) {
               diagram.model.startTransaction("edit");
               diagram.model.setDataProperty(node.data, "desc", nota);
               diagram.model.commitTransaction("edit");
               localStorage.setItem(node.data.key, nota);
+              closePopup();
             }
-          },
-          toolTip:
-            $("ToolTip",
-              $(go.TextBlock, { margin: 6 }, new go.Binding("text", "desc"))
-            )
+          }
         },
         $(go.Shape, "RoundedRectangle",
           { name: "SHAPE", fill: "#e6f0ff", stroke: "#004aad", strokeWidth: 2 }),
         $(go.TextBlock,
-          { margin: 8, font: "bold 13px sans-serif" },
+          { margin: 8, font: "bold 13px sans-serif", editable: false },
           new go.Binding("text", "text"))
       );
 
@@ -113,7 +158,23 @@
         $(go.Shape, { toArrow: "Standard" })
       );
 
-    // Modelos
+    // Popup y overlay control
+    const popup = document.getElementById('descPopup');
+    const overlay = document.getElementById('overlay');
+    const descText = document.getElementById('descText');
+
+    function showDescription(data) {
+      descText.textContent = data.desc || "Sin descripción disponible.";
+      popup.style.display = 'block';
+      overlay.style.display = 'block';
+    }
+    function closePopup() {
+      popup.style.display = 'none';
+      overlay.style.display = 'none';
+    }
+    overlay.addEventListener('click', closePopup);
+
+    // Modelos con datos (información completa del PDF y emojis)
     const modelos = {
       disruptivo: {
         nodeDataArray: [
@@ -176,6 +237,7 @@
         const nota = localStorage.getItem(node.data.key);
         if (nota) diagram.model.setDataProperty(node.data, "desc", nota);
       });
+      closePopup();
     }
 
     function saveAsImage() {
