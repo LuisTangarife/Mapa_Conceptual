@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mapas Conceptuales - Interactivos</title>
+  <title>Mapa Conceptual - Modelos de Negocio</title>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
     body {
@@ -27,67 +27,84 @@
     .description {
       display: none;
       padding: 1rem;
-      background-color: #e3f2fd;
-      border-left: 5px solid #64b5f6;
+      background-color: #e0f7fa;
+      border-left: 5px solid #26c6da;
       margin-bottom: 2rem;
     }
   </style>
   <script>
     mermaid.initialize({ startOnLoad: true });
     function toggleDescription(id) {
+      document.querySelectorAll('.description').forEach(el => el.style.display = 'none');
       const el = document.getElementById(id);
-      el.style.display = el.style.display === 'none' ? 'block' : 'none';
+      if (el) el.style.display = 'block';
     }
   </script>
 </head>
 <body>
-  <h1>Mapas Conceptuales - Interactivos</h1>
+  <h1>Mapa Conceptual de Modelos de Negocio</h1>
 
   <div class="mermaid">
     graph TD
-      A[Modelo Disruptivo] --> B(Innovación Disruptiva)
-      A --> C(Características)
-      A --> D(Ejemplos)
-      B --> B1[Optimización de procesos]
-      B --> B2[IA, IoT, Blockchain]
-      C --> C1[Transformación cultural]
-      C --> C2[Competencia]
-      D --> D1[Spotify]
-      D --> D2[Uber]
-      D --> D3[Tesla]
-      click A call toggleDescription("desc-disruptivo")
+      A[Modelos de Negocio] --> B[Disruptivo]
+      A --> C[Cola Larga (Long Tail)]
+      A --> D[Plataforma Multilateral]
+
+      B --> B1[Innovación Disruptiva]
+      B --> B2[Impacto Tecnológico]
+      B --> B3[Características]
+      B --> B4[Ejemplos]
+      B1 --> B1a[Rompe esquemas tradicionales]
+      B1 --> B1b[Optimiza procesos, IA, IoT, Blockchain]
+      B2 --> B2a[Digitalización corporativa]
+      B2 --> B2b[Economía de plataformas]
+      B2 --> B2c[Modelo centralizado y descentralizado]
+      B2 --> B2d[Economía efímera]
+      B3 --> B3a[Transformación cultural]
+      B3 --> B3b[Nuevas demandas y procesos]
+      B3 --> B3c[Aumento de competencia]
+      B4 --> B4a[Spotify, Uber, Tesla, Airbnb, Google, Netflix]
+
+      C --> C1[Venta en pequeñas cantidades]
+      C --> C2[Soporte Tecnológico]
+      C --> C3[Ejemplos]
+      C1 --> C1a[Muchos productos con baja demanda]
+      C1 --> C1b[Eliminación de intermediarios]
+      C2 --> C2a[Menores costos de almacenamiento y distribución]
+      C2 --> C2b[Democratización de medios y herramientas de autor]
+      C3 --> C3a[Amazon, Netflix, LEGO]
+
+      D --> D1[Interacción entre usuarios]
+      D --> D2[Efecto Red]
+      D --> D3[Tipos de plataformas]
+      D --> D4[Ejemplos]
+      D1 --> D1a[Segmentos interdependientes]
+      D1 --> D1b[Creación de valor compartido]
+      D2 --> D2a[Efectos directos e indirectos]
+      D3 --> D3a[Marketplace, economía compartida]
+      D3 --> D3b[Redes sociales y contenido]
+      D4 --> D4a[Airbnb, Uber, Amazon, eBay, Facebook, Instagram]
+
+      click B call toggleDescription("desc-disruptivo")
+      click C call toggleDescription("desc-cola")
+      click D call toggleDescription("desc-plataforma")
   </div>
+
   <div id="desc-disruptivo" class="description">
-    <strong>Modelo Disruptivo:</strong> Modelo que rompe esquemas tradicionales usando tecnologías emergentes. Impacta mercados, sociedad y cultura.
+    <strong>Modelo Disruptivo:</strong><br>
+    Se basa en la innovación que rompe esquemas tradicionales, introduciendo nuevas formas de producir, distribuir y consumir bienes y servicios mediante tecnologías emergentes como la inteligencia artificial, blockchain, IoT y plataformas digitales. Tiene un gran impacto cultural y económico.
   </div>
 
-  <div class="mermaid">
-    graph TD
-      E[Modelo Cola Larga] --> F(Diversificación)
-      E --> G(Tecnología)
-      E --> H(Ejemplos)
-      F --> F1[Baja demanda, muchos productos]
-      G --> G1[Reducción de costos]
-      H --> H1[Amazon]
-      H --> H2[Netflix]
-      click E call toggleDescription("desc-cola")
-  </div>
   <div id="desc-cola" class="description">
-    <strong>Modelo de Cola Larga:</strong> Vender muchos productos de baja demanda gracias a la tecnología digital. Democratiza la producción.
+    <strong>Modelo de Cola Larga:</strong><br>
+    Busca vender una gran variedad de productos en pequeñas cantidades, apoyándose en tecnologías digitales que reducen los costos logísticos. Democratiza la producción y distribución, permitiendo que los productos de nicho sean rentables.
   </div>
 
-  <div class="mermaid">
-    graph TD
-      I[Modelo Plataforma Multilateral] --> J(Efecto Red)
-      I --> K(Segmentos)
-      I --> L(Ejemplos)
-      K --> K1[Clientes interdependientes]
-      L --> L1[Amazon]
-      L --> L2[Airbnb]
-      click I call toggleDescription("desc-plataforma")
-  </div>
   <div id="desc-plataforma" class="description">
-    <strong>Modelo Plataforma Multilateral:</strong> Reúne varios segmentos de usuarios en una misma plataforma para crear valor a través de la interacción.
+    <strong>Modelo de Plataforma Multilateral:</strong><br>
+    Conecta distintos tipos de usuarios para que intercambien bienes o servicios. Cuantos más usuarios tiene la plataforma, mayor es su valor (efecto red). Su valor radica en generar beneficios para todos los participantes, como compradores y vendedores.
   </div>
+
 </body>
 </html>
+
