@@ -7,46 +7,62 @@
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #fefefe;
-      color: #333;
+      background-color: #f9f9f6;
+      color: #2c3e50;
       margin: 0;
       padding: 2rem;
     }
     h1 {
       text-align: center;
-      color: #3a0ca3;
+      color: #3b5b7c;
     }
     .mapa {
-      background: #f8f9fa;
-      border-left: 10px solid #3a0ca3;
+      background: #e6f0f7;
+      border-left: 10px solid #b9cbdc;
       padding: 2rem;
       margin-bottom: 2.5rem;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     }
     h2 {
-      color: #4361ee;
+      color: #476d89;
     }
     .concepto {
-      background-color: #bde0fe;
+      background-color: #dceefc;
       padding: 1rem;
       border-radius: 8px;
       margin: 1rem 0 0.5rem;
       font-weight: bold;
     }
     .subconcepto {
-      background-color: #ffafcc;
+      background-color: #fdf6ed;
       padding: 0.8rem;
-      border-left: 5px solid #ff6f91;
+      border-left: 5px solid #f4dcc2;
       margin: 0.5rem 0;
       border-radius: 6px;
+    }
+    .btn-container {
+      text-align: center;
+      margin-top: 3rem;
+    }
+    .btn {
+      padding: 0.8rem 1.5rem;
+      background-color: #a8c6df;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .btn:hover {
+      background-color: #7ea9c7;
     }
   </style>
 </head>
 <body>
   <h1>Mapas Conceptuales - Modelos de Negocio</h1>
 
-  <!-- Modelo Disruptivo -->
   <div class="mapa">
     <h2>Modelo de Negocio Disruptivo</h2>
     <div class="concepto">Innovación Disruptiva</div>
@@ -66,15 +82,8 @@
     <div class="subconcepto">Gratis con publicidad (Google, Facebook)</div>
     <div class="subconcepto">Economía colaborativa (Airbnb, Sharoo)</div>
     <div class="subconcepto">Bajo demanda (Uber, Amazon Prime)</div>
-
-    <div class="concepto">Entornos Asociados</div>
-    <div class="subconcepto">Digitalización corporativa</div>
-    <div class="subconcepto">Economía de plataformas</div>
-    <div class="subconcepto">Modelo centralizado (Blockchain)</div>
-    <div class="subconcepto">Economía efímera y exceso de mercado</div>
   </div>
 
-  <!-- Modelo de Cola Larga -->
   <div class="mapa">
     <h2>Modelo de Cola Larga (Long Tail)</h2>
     <div class="concepto">Principios</div>
@@ -92,33 +101,35 @@
     <div class="subconcepto">Facilita la entrada de artistas y creadores independientes</div>
 
     <div class="concepto">Ejemplos</div>
-    <div class="subconcepto">Amazon (librería gigante con libros de baja demanda)</div>
+    <div class="subconcepto">Amazon (librería con libros de baja demanda)</div>
     <div class="subconcepto">Netflix (contenido independiente y de nicho)</div>
-    <div class="subconcepto">LEGO (kits personalizados, LEGO Digital Designer)</div>
+    <div class="subconcepto">LEGO (kits personalizados por usuarios)</div>
   </div>
 
-  <!-- Modelo Plataforma Multilateral -->
   <div class="mapa">
     <h2>Modelo de Plataforma Multilateral</h2>
     <div class="concepto">Definición</div>
-    <div class="subconcepto">Plataforma que conecta dos o más segmentos interdependientes</div>
-    <div class="subconcepto">Generación de valor a través de la interacción</div>
+    <div class="subconcepto">Conecta segmentos interdependientes</div>
+    <div class="subconcepto">Genera valor mediante interacción</div>
 
     <div class="concepto">Efecto Red</div>
-    <div class="subconcepto">A mayor número de usuarios, mayor valor de la plataforma</div>
+    <div class="subconcepto">Mayor número de usuarios, mayor valor</div>
     <div class="subconcepto">Efecto directo (redes sociales)</div>
     <div class="subconcepto">Efecto indirecto (Uber: más conductores, más usuarios)</div>
 
     <div class="concepto">Ventajas</div>
     <div class="subconcepto">Bajos costos operativos</div>
     <div class="subconcepto">No requiere fabricar ni almacenar productos</div>
-    <div class="subconcepto">Facilidad para escalar el negocio</div>
+    <div class="subconcepto">Escalable con facilidad</div>
 
     <div class="concepto">Ejemplos</div>
-    <div class="subconcepto">Marketplace: Amazon, eBay, Alibaba</div>
+    <div class="subconcepto">Marketplace: Amazon, eBay</div>
     <div class="subconcepto">Economía colaborativa: Airbnb, Uber</div>
-    <div class="subconcepto">Redes sociales y contenido: Facebook, Instagram</div>
+    <div class="subconcepto">Redes sociales: Facebook, Instagram</div>
   </div>
 
+  <div class="btn-container">
+    <button class="btn" onclick="alert('Próximamente: vista en imagen estructural.')">Ver como imagen de mapa conceptual</button>
+  </div>
 </body>
 </html>
