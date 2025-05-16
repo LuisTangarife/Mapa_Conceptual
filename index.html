@@ -1,135 +1,293 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mapas Conceptuales - Modelos de Negocio</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f9f9f6;
-      color: #2c3e50;
-      margin: 0;
-      padding: 2rem;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mapa Conceptual Profesional - Modelos de Negocio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+
+  body {
+    background: #f0f4f8;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0; padding: 2rem;
+    color: #1b2a41;
+  }
+  h1 {
+    text-align: center;
+    font-size: 2.8rem;
+    color: #01497c;
+    margin-bottom: 3rem;
+  }
+
+  .mapa-conceptual {
+    max-width: 1200px;
+    margin: auto;
+    background: #ffffff;
+    padding: 3rem 4rem;
+    border-radius: 16px;
+    box-shadow: 0 12px 28px rgb(0 0 0 / 0.1);
+    position: relative;
+  }
+
+  /* Nodo principal */
+  .nodo-principal {
+    background: #01497c;
+    color: white;
+    font-size: 1.9rem;
+    font-weight: 700;
+    padding: 1rem 2rem;
+    border-radius: 20px;
+    width: fit-content;
+    margin: 0 auto 4rem auto;
+    box-shadow: 0 0 12px #012f4a;
+    text-align: center;
+  }
+
+  /* Contenedor general de modelos */
+  .modelos {
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* Cada modelo */
+  .modelo {
+    background: #e8f1f8;
+    border-radius: 16px;
+    padding: 1.8rem 2rem 2.2rem 2rem;
+    width: 360px;
+    box-shadow: 0 6px 20px rgb(1 73 124 / 0.15);
+    position: relative;
+  }
+
+  /* Titulo del modelo */
+  .modelo > h2 {
+    font-size: 1.6rem;
+    color: #03396c;
+    text-align: center;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 3px rgba(1, 57, 97, 0.5);
+  }
+
+  /* Conceptos principales */
+  .concepto {
+    background: #3a86ff;
+    color: white;
+    font-weight: 600;
+    padding: 0.7rem 1rem;
+    border-radius: 12px;
+    margin-top: 1rem;
+    box-shadow: 0 0 8px #1e3f7f;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  /* Subconceptos */
+  .subconcepto {
+    background: #d0e8ff;
+    color: #01497c;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    margin: 0.4rem 0 0.4rem 2rem;
+    border-left: 4px solid #3a86ff;
+    border-radius: 8px;
+    box-shadow: 1px 1px 5px rgb(58 134 255 / 0.3);
+    font-size: 0.9rem;
+  }
+
+  /* Líneas y conexiones con pseudo-elementos */
+  .modelo:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -40px;
+    width: 40px;
+    height: 3px;
+    background: #3a86ff;
+    border-radius: 3px;
+    box-shadow: 0 0 6px #3a86ffaa;
+    transform: translateY(-50%);
+  }
+
+  /* Iconos SVG pequeños */
+  .icono {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 1100px) {
+    .modelos {
+      flex-direction: column;
+      align-items: center;
     }
-    h1 {
-      text-align: center;
-      color: #3b5b7c;
+    .modelo:not(:last-child)::after {
+      display: none;
     }
-    .mapa {
-      background: #e6f0f7;
-      border-left: 10px solid #b9cbdc;
-      padding: 2rem;
-      margin-bottom: 2.5rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    }
-    h2 {
-      color: #476d89;
-    }
-    .concepto {
-      background-color: #dceefc;
-      padding: 1rem;
-      border-radius: 8px;
-      margin: 1rem 0 0.5rem;
-      font-weight: bold;
-    }
-    .subconcepto {
-      background-color: #fdf6ed;
-      padding: 0.8rem;
-      border-left: 5px solid #f4dcc2;
-      margin: 0.5rem 0;
-      border-radius: 6px;
-    }
-    .btn-container {
-      text-align: center;
-      margin-top: 3rem;
-    }
-    .btn {
-      padding: 0.8rem 1.5rem;
-      background-color: #a8c6df;
-      border: none;
-      border-radius: 8px;
-      color: #fff;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    .btn:hover {
-      background-color: #7ea9c7;
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <h1>Mapas Conceptuales - Modelos de Negocio</h1>
 
-  <div class="mapa">
-    <h2>Modelo de Negocio Disruptivo</h2>
-    <div class="concepto">Innovación Disruptiva</div>
-    <div class="subconcepto">Ruptura de modelos tradicionales</div>
-    <div class="subconcepto">Uso de tecnologías como IA, IoT, Blockchain</div>
-    <div class="subconcepto">Eliminación de intermediarios</div>
+<h1>Mapa Conceptual: Modelos de Negocio</h1>
 
-    <div class="concepto">Características</div>
-    <div class="subconcepto">Transformación cultural organizacional</div>
-    <div class="subconcepto">Aceleración de la innovación</div>
-    <div class="subconcepto">Generación de nuevas formas de demanda</div>
-    <div class="subconcepto">Estimula la competencia</div>
+<div class="mapa-conceptual">
 
-    <div class="concepto">Ejemplos de Modelos</div>
-    <div class="subconcepto">Freemium (Spotify, Canvas)</div>
-    <div class="subconcepto">Suscripción (Netflix, Amazon)</div>
-    <div class="subconcepto">Gratis con publicidad (Google, Facebook)</div>
-    <div class="subconcepto">Economía colaborativa (Airbnb, Sharoo)</div>
-    <div class="subconcepto">Bajo demanda (Uber, Amazon Prime)</div>
+  <div class="nodo-principal" aria-label="Tema principal: Modelos de Negocio">
+    Modelos de Negocio
   </div>
 
-  <div class="mapa">
-    <h2>Modelo de Cola Larga (Long Tail)</h2>
-    <div class="concepto">Principios</div>
-    <div class="subconcepto">Más productos vendidos en menor cantidad</div>
-    <div class="subconcepto">Rompimiento del principio de Pareto (20/80)</div>
+  <div class="modelos">
 
-    <div class="concepto">Tecnología como facilitador</div>
-    <div class="subconcepto">Reducción de costos de distribución y almacenamiento</div>
-    <div class="subconcepto">Acceso a herramientas de autor</div>
-    <div class="subconcepto">Mayor alcance por internet</div>
+    <!-- Modelo Disruptivo -->
+    <section class="modelo" aria-labelledby="disruptivo-title">
+      <h2 id="disruptivo-title">Modelo Disruptivo</h2>
 
-    <div class="concepto">Ventajas</div>
-    <div class="subconcepto">Diversificación y personalización del producto</div>
-    <div class="subconcepto">Adaptación a gustos minoritarios</div>
-    <div class="subconcepto">Facilita la entrada de artistas y creadores independientes</div>
+      <div class="concepto">
+        <svg class="icono" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 2l3 7h7l-6 5 2 7-6-4-6 4 2-7-6-5h7z"/>
+        </svg>
+        Innovación Disruptiva
+      </div>
+      <div class="subconcepto">Ruptura de modelos tradicionales</div>
+      <div class="subconcepto">Uso de tecnologías: IA, IoT, Blockchain</div>
+      <div class="subconcepto">Eliminación de intermediarios</div>
 
-    <div class="concepto">Ejemplos</div>
-    <div class="subconcepto">Amazon (librería con libros de baja demanda)</div>
-    <div class="subconcepto">Netflix (contenido independiente y de nicho)</div>
-    <div class="subconcepto">LEGO (kits personalizados por usuarios)</div>
+      <div class="concepto">
+        <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M2 12h20"/>
+          <path d="M12 2a10 10 0 0 1 10 10"/>
+        </svg>
+        Características
+      </div>
+      <div class="subconcepto">Transformación cultural organizacional</div>
+      <div class="subconcepto">Aceleración de la innovación</div>
+      <div class="subconcepto">Genera nuevas formas de demanda</div>
+      <div class="subconcepto">Estimula la competencia</div>
+
+      <div class="concepto">
+        <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <rect x="3" y="3" width="18" height="14" rx="2"/>
+          <path d="M3 10h18"/>
+        </svg>
+        Ejemplos
+      </div>
+      <div class="subconcepto">Freemium (Spotify, Canvas)</div>
+      <div class="subconcepto">Suscripción (Netflix, Amazon)</div>
+      <div class="subconcepto">Gratis con publicidad (Google, Facebook)</div>
+      <div class="subconcepto">Economía colaborativa (Airbnb, Sharoo)</div>
+      <div class="subconcepto">Bajo demanda (Uber, Amazon Prime)</div>
+    </section>
+
+    <!-- Modelo Cola Larga -->
+    <section class="modelo" aria-labelledby="cola-larga-title">
+      <h2 id="cola-larga-title">Modelo de Cola Larga</h2>
+
+      <div class="concepto">
+        <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M12 20v-8"/>
+          <path d="M12 4v4"/>
+          <path d="M4 12h16"/>
+        </svg>
+        Principios
+      </div>
+      <div class="subconcepto">Más productos vendidos en menor cantidad</div>
+      <div class="subconcepto">Rompimiento del principio de Pareto (20/80)</div>
+
+      <div class="concepto">
+        <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 6v6l4 2"/>
+        </svg>
+        Tecnología como facilitador
+      </div>
+      <div class="subconcepto">Reducción de costos de distribución y almacenamiento</div>
+      <div class="subconcepto">Acceso a herramientas de autor</div>
+      <div class="subconcepto">Mayor alcance por internet</div>
+
+      <div class="concepto">
+        <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M4 17h16"/>
+          <path d="M4 12h16"/>
+          <path d="M4 7h16"/>
+        </svg>
+        Ventajas
+      </div>
+      <div class="subconcepto">Diversificación y personalización del producto</div>
+      <div class="subconcepto">Adaptación a gustos minoritarios</div>
+      <div class="subconcepto">Facilita entrada de creadores independientes</div>
+
+      <div class="concepto">
+        <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <path d="M3 9h18"/>
+          <path d="M9 21V9"/>
+        </svg>
+        Ejemplos
+      </div>
+      <div class="subconcepto">Amazon (libros de baja demanda)</div>
+      <div class="subconcepto">Netflix (contenido independiente y de nicho)</div>
+      <div class="subconcepto">LEGO (kits personalizados por usuarios)</div>
+    </section>
+
+    <!-- Modelo Plataforma Multilateral -->
+    <section class="modelo" aria-labelledby="plataforma-title">
+      <h2 id="plataforma-title">Modelo Plataforma Multilateral</h2>
+
+      <div class="concepto">
+        <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M8 12h8"/>
+          <path d="M12 8v8"/>
+        </svg>
+        Definición
+      </div>
+      <div class="subconcepto">Conecta segmentos interdependientes</div>
+      <div class="subconcepto">Genera valor mediante interacción</div>
+
+      <div class="concepto">
+        <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 6v12"/>
+          <path d="M6 12h12"/>
+        </svg>
+        Efecto Red
+      </div>
+      <div class="subconcepto">Mayor número de usuarios, mayor valor</div>
+      <div class="subconcepto">Efecto directo (redes sociales)</div>
+      <div class="subconcepto">Efecto indirecto (Uber: más conductores, más usuarios)</div>
+
+      <div class="concepto">
+        <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M6 12h12"/>
+          <path d="M12 6v12"/>
+          <path d="M6 18h12"/>
+        </svg>
+        Ventajas
+      </div>
+      <div class="subconcepto">Bajos costos operativos</div>
+      <div class="subconcepto">No requiere fabricar ni almacenar productos</div>
+      <div class="subconcepto">Escalable con facilidad</div>
+
+      <div class="concepto">
+        <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M3 5h18v14H3z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+        Ejemplos
+      </div>
+      <div class="subconcepto">Marketplace: Amazon, eBay</div>
+      <div class="subconcepto">Economía colaborativa: Airbnb, Uber</div>
+      <div class="subconcepto">Redes sociales: Facebook, Instagram</div>
+    </section>
+
   </div>
+</div>
 
-  <div class="mapa">
-    <h2>Modelo de Plataforma Multilateral</h2>
-    <div class="concepto">Definición</div>
-    <div class="subconcepto">Conecta segmentos interdependientes</div>
-    <div class="subconcepto">Genera valor mediante interacción</div>
-
-    <div class="concepto">Efecto Red</div>
-    <div class="subconcepto">Mayor número de usuarios, mayor valor</div>
-    <div class="subconcepto">Efecto directo (redes sociales)</div>
-    <div class="subconcepto">Efecto indirecto (Uber: más conductores, más usuarios)</div>
-
-    <div class="concepto">Ventajas</div>
-    <div class="subconcepto">Bajos costos operativos</div>
-    <div class="subconcepto">No requiere fabricar ni almacenar productos</div>
-    <div class="subconcepto">Escalable con facilidad</div>
-
-    <div class="concepto">Ejemplos</div>
-    <div class="subconcepto">Marketplace: Amazon, eBay</div>
-    <div class="subconcepto">Economía colaborativa: Airbnb, Uber</div>
-    <div class="subconcepto">Redes sociales: Facebook, Instagram</div>
-  </div>
-
-  <div class="btn-container">
-    <button class="btn" onclick="alert('Próximamente: vista en imagen estructural.')">Ver como imagen de mapa conceptual</button>
-  </div>
 </body>
 </html>
