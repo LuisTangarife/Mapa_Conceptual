@@ -2,171 +2,195 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Modelos de Negocio Interactivos</title>
+  <title>Mapa Conceptual - Modelos de Negocio</title>
+  <script src="https://unpkg.com/gojs@2.3.15/release/go.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
+      font-family: 'Segoe UI', sans-serif;
       margin: 0;
       padding: 0;
-      color: #333;
+      background: #f1f5f9;
     }
     header {
-      background: #004aad;
+      background-color: #004aad;
       color: white;
       padding: 1rem;
       text-align: center;
     }
-    main {
-      padding: 2rem;
-      max-width: 1000px;
-      margin: auto;
-    }
-    .tarjeta {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      margin-bottom: 1.5rem;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-    .concepto-principal {
-      background: #004aad;
-      color: white;
-      padding: 1rem;
-      cursor: pointer;
+    nav {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      justify-content: center;
+      background-color: #e0e0e0;
+      padding: 1rem;
+      gap: 1rem;
+    }
+    nav button {
+      padding: 0.6rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
       font-weight: bold;
     }
-    .contenido {
-      display: none;
-      padding: 1rem;
-      animation: fadeIn 0.3s ease-in-out;
+    nav button:hover {
+      background-color: #ccc;
     }
-    .contenido.show {
-      display: block;
-    }
-    .toggle-icon {
-      transition: transform 0.3s ease;
-    }
-    .toggle-icon.rotated {
-      transform: rotate(90deg);
-    }
-    textarea {
+    #diagramDiv {
       width: 100%;
-      height: 100px;
-      margin-top: 1rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      padding: 0.5rem;
-      resize: vertical;
+      height: 80vh;
+      border-top: 1px solid #ccc;
     }
-    button.btn-guardar {
-      margin-top: 0.5rem;
+    .controls {
+      text-align: center;
+      padding: 1rem;
+      background: #fff;
+    }
+    .controls button {
+      margin: 0.5rem;
+      padding: 0.5rem 1rem;
       background: #004aad;
       color: white;
       border: none;
-      padding: 0.5rem 1rem;
       border-radius: 6px;
       cursor: pointer;
     }
-    button.btn-guardar:hover {
-      background: #003580;
-    }
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
+    .controls button:hover {
+      background-color: #003580;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Modelos de Negocio Interactivos</h1>
-    <p>Haz clic en un modelo para explorarlo y tomar notas</p>
+    <h1>Mapa Conceptual Interactivo - Modelos de Negocio</h1>
   </header>
 
-  <main>
-    <!-- Tarjeta: Modelo de Negocio Tradicional -->
-    <section class="tarjeta">
-      <div class="concepto-principal" data-target="contenido1">
-        Modelo de Negocio Tradicional
-        <span class="toggle-icon">▶</span>
-      </div>
-      <div class="contenido" id="contenido1">
-        <p>
-          Este modelo se basa en la venta directa de productos o servicios. El negocio genera ingresos al ofrecer un bien tangible o intangible al cliente a cambio de dinero.
-        </p>
-        <ul>
-          <li><strong>Ejemplo:</strong> Tiendas físicas, restaurantes, ferreterías.</li>
-          <li><strong>Ventajas:</strong> Sencillez, control del proceso completo.</li>
-          <li><strong>Desventajas:</strong> Costos fijos elevados, dificultad para escalar.</li>
-        </ul>
-        <label for="nota1"><strong>Mis notas:</strong></label>
-        <textarea id="nota1" placeholder="Escribe tus observaciones aquí..."></textarea>
-        <button class="btn-guardar" data-textarea="nota1">Guardar Nota</button>
-      </div>
-    </section>
+  <nav>
+    <button onclick="loadModel('disruptivo')">Modelo Disruptivo</button>
+    <button onclick="loadModel('cola')">Modelo de Cola Larga</button>
+    <button onclick="loadModel('plataforma')">Modelo Plataforma Multilateral</button>
+  </nav>
 
-    <!-- Tarjeta: Modelo de Suscripción -->
-    <section class="tarjeta">
-      <div class="concepto-principal" data-target="contenido2">
-        Modelo de Suscripción
-        <span class="toggle-icon">▶</span>
-      </div>
-      <div class="contenido" id="contenido2">
-        <p>
-          Este modelo cobra a los clientes de manera recurrente (mensual, anual) por el acceso a un producto o servicio.
-        </p>
-        <ul>
-          <li><strong>Ejemplo:</strong> Netflix, Spotify, Adobe Creative Cloud.</li>
-          <li><strong>Ventajas:</strong> Flujo de ingresos constante, fidelización del cliente.</li>
-          <li><strong>Desventajas:</strong> Requiere valor constante para mantener suscriptores.</li>
-        </ul>
-        <label for="nota2"><strong>Mis notas:</strong></label>
-        <textarea id="nota2" placeholder="Escribe tus observaciones aquí..."></textarea>
-        <button class="btn-guardar" data-textarea="nota2">Guardar Nota</button>
-      </div>
-    </section>
+  <div class="controls">
+    <button onclick="saveAsImage()">Exportar como Imagen</button>
+    <button onclick="window.print()">Exportar como PDF</button>
+  </div>
 
-    <!-- Puedes agregar más tarjetas aquí, por ejemplo: Modelo Canvas, Lean Startup, etc. -->
-
-  </main>
+  <div id="diagramDiv"></div>
 
   <script>
-    // Expandir/cerrar tarjetas
-    document.querySelectorAll('.concepto-principal').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.dataset.target;
-        const content = document.getElementById(id);
-        const icon = btn.querySelector('.toggle-icon');
-        content.classList.toggle('show');
-        icon.classList.toggle('rotated');
-      });
+    const $ = go.GraphObject.make;
+    const diagram = $(go.Diagram, "diagramDiv", {
+      "undoManager.isEnabled": true,
+      layout: $(go.ForceDirectedLayout)
     });
 
-    // Guardar notas en localStorage
-    document.querySelectorAll('.btn-guardar').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const textareaId = btn.dataset.textarea;
-        const content = document.getElementById(textareaId).value;
-        localStorage.setItem(textareaId, content);
-        btn.textContent = "Guardado ✔";
-        setTimeout(() => {
-          btn.textContent = "Guardar Nota";
-        }, 2000);
-      });
-    });
+    diagram.nodeTemplate =
+      $(go.Node, "Auto",
+        {
+          resizable: true, resizeObjectName: "SHAPE",
+          toolTip:
+            $("ToolTip",
+              $(go.TextBlock, { margin: 4 },
+                new go.Binding("text", "desc"))
+            ),
+          doubleClick: function (e, node) {
+            const nota = prompt("Escribe o edita tu nota:", node.data.desc || "");
+            if (nota !== null) {
+              diagram.model.startTransaction("update");
+              diagram.model.setDataProperty(node.data, "desc", nota);
+              diagram.model.commitTransaction("update");
+              localStorage.setItem(node.data.key, nota);
+            }
+          }
+        },
+        $(go.Shape, "RoundedRectangle",
+          {
+            name: "SHAPE", fill: "#cce5ff", strokeWidth: 0
+          }),
+        $(go.TextBlock,
+          { margin: 8, editable: false, font: "bold 14px sans-serif" },
+          new go.Binding("text", "text"))
+      );
 
-    // Cargar notas guardadas al cargar la página
-    window.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('textarea').forEach(area => {
-        const saved = localStorage.getItem(area.id);
-        if (saved) area.value = saved;
+    diagram.linkTemplate =
+      $(go.Link,
+        { routing: go.Link.AvoidsNodes, corner: 5 },
+        $(go.Shape),
+        $(go.Shape, { toArrow: "Standard" })
+      );
+
+    const modelos = {
+      disruptivo: {
+        class: "go.GraphLinksModel",
+        nodeDataArray: [
+          { key: "Disruptivo", text: "Modelo Disruptivo", desc: "Innovación que rompe el modelo tradicional" },
+          { key: "IA", text: "Inteligencia Artificial", desc: "Aprendizaje automático, automatización avanzada" },
+          { key: "Blockchain", text: "Blockchain", desc: "Transacciones seguras y descentralizadas" },
+          { key: "IoT", text: "Internet de las Cosas", desc: "Conectividad entre dispositivos" },
+          { key: "Cultura", text: "Cambio Cultural", desc: "Transformación organizacional" },
+          { key: "Demanda", text: "Nuevas Demandas", desc: "Nuevas formas de consumir y producir" }
+        ],
+        linkDataArray: [
+          { from: "Disruptivo", to: "IA" },
+          { from: "Disruptivo", to: "Blockchain" },
+          { from: "Disruptivo", to: "IoT" },
+          { from: "Disruptivo", to: "Cultura" },
+          { from: "Disruptivo", to: "Demanda" }
+        ]
+      },
+      cola: {
+        class: "go.GraphLinksModel",
+        nodeDataArray: [
+          { key: "Cola", text: "Modelo de Cola Larga", desc: "Vender más variedad en pequeñas cantidades" },
+          { key: "Internet", text: "Internet", desc: "Acceso global y sin límites físicos" },
+          { key: "Costos", text: "Reducción de Costos", desc: "Distribución digital eficiente" },
+          { key: "Democratización", text: "Democratización", desc: "Acceso a herramientas de autor" },
+          { key: "Amazon", text: "Amazon", desc: "Ejemplo clásico con libros de baja demanda" },
+          { key: "LEGO", text: "LEGO", desc: "Kits personalizados por usuarios" }
+        ],
+        linkDataArray: [
+          { from: "Cola", to: "Internet" },
+          { from: "Cola", to: "Costos" },
+          { from: "Cola", to: "Democratización" },
+          { from: "Cola", to: "Amazon" },
+          { from: "Cola", to: "LEGO" }
+        ]
+      },
+      plataforma: {
+        class: "go.GraphLinksModel",
+        nodeDataArray: [
+          { key: "Plataforma", text: "Modelo Multilateral", desc: "Interacción entre múltiples actores" },
+          { key: "Red", text: "Efecto Red", desc: "Más usuarios = más valor" },
+          { key: "Usuarios", text: "Usuarios", desc: "Clientes interdependientes" },
+          { key: "Marketplace", text: "Marketplace", desc: "Amazon, eBay, Airbnb, Uber" },
+          { key: "Redes", text: "Redes Sociales", desc: "Facebook, Instagram" }
+        ],
+        linkDataArray: [
+          { from: "Plataforma", to: "Red" },
+          { from: "Plataforma", to: "Usuarios" },
+          { from: "Plataforma", to: "Marketplace" },
+          { from: "Plataforma", to: "Redes" }
+        ]
+      }
+    };
+
+    function loadModel(name) {
+      diagram.model = go.Model.fromJson(modelos[name]);
+      diagram.nodes.each(node => {
+        const saved = localStorage.getItem(node.data.key);
+        if (saved) node.data.desc = saved;
       });
-    });
+    }
+
+    function saveAsImage() {
+      const img = diagram.makeImageData({ background: "white", scale: 1 });
+      const link = document.createElement("a");
+      link.download = "mapa_modelo.png";
+      link.href = img;
+      link.click();
+    }
+
+    // Cargar modelo inicial
+    loadModel("disruptivo");
   </script>
 </body>
 </html>
