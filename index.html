@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Mapa Conceptual con Posiciones Guardadas</title>
+  <title>Mapa Conceptual Guardado</title>
   <script src="https://unpkg.com/gojs@2.3.15/release/go.js"></script>
   <style>
     body {
@@ -14,8 +14,8 @@
     header {
       background: #004aad;
       color: white;
-      padding: 1rem;
       text-align: center;
+      padding: 1rem;
     }
     nav {
       display: flex;
@@ -83,22 +83,32 @@
     "undoManager.isEnabled": true
   });
 
-  // Nodo con texto + descripción + posición
+  // Actualiza loc en cada nodo
+  diagram.addDiagramListener("Modified", () => {
+    diagram.nodes.each(node => {
+      if (node instanceof go.Node) {
+        node.data.loc = go.Point.stringify(node.location);
+      }
+    });
+    autoSave();
+  });
+
   diagram.nodeTemplate =
     $(go.Node, "Auto",
       {
-        locationSpot: go.Spot.Center,
+        locationSpot: go.Spot.Center
+      },
+      new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+      {
         doubleClick: (e, node) => {
           const nuevaDesc = prompt("Editar descripción:", node.data.desc || "");
           if (nuevaDesc !== null) {
-            diagram.model.startTransaction("update");
+            diagram.model.startTransaction("edit");
             diagram.model.setDataProperty(node.data, "desc", nuevaDesc);
-            diagram.model.commitTransaction("update");
-            autoSave();
+            diagram.model.commitTransaction("edit");
           }
         }
       },
-      new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
       $(go.Shape, "RoundedRectangle",
         { fill: "#e6f0ff", stroke: "#004aad", strokeWidth: 2 }),
       $(go.Panel, "Vertical",
@@ -118,25 +128,17 @@
       $(go.Shape, { toArrow: "Standard" })
     );
 
-  // Guardar posición automáticamente al mover nodos
-  diagram.addDiagramListener("SelectionMoved", e => {
-    diagram.selection.each(node => {
-      if (node instanceof go.Node) {
-        diagram.model.setDataProperty(node.data, "loc", go.Point.stringify(node.location));
-      }
-    });
-    autoSave();
-  });
+  let modeloActual = "disruptivo";
 
-  const modelos = {
+  const modelosBase = {
     disruptivo: {
       nodeDataArray: [
-        { key: "D0", text: "💡 Modelo Disruptivo", desc: "Rompe esquemas tradicionales." },
-        { key: "D1", text: "🚀 Características", desc: "Transformación cultural, nuevas demandas." },
-        { key: "D2", text: "🤖 Tecnologías", desc: "IA, IoT, Blockchain." },
-        { key: "D3", text: "🔄 Sin Intermediarios", desc: "Contacto directo consumidor." },
-        { key: "D4", text: "📈 Competencia", desc: "Estimula innovación." },
-        { key: "D5", text: "🏢 Ejemplos", desc: "Spotify, Netflix, Uber." }
+        { key: "D0", text: "💡 Modelo Disruptivo", desc: "Rompe esquemas tradicionales.", loc: "0 0" },
+        { key: "D1", text: "🚀 Características", desc: "Transformación cultural.", loc: "150 -80" },
+        { key: "D2", text: "🤖 Tecnologías", desc: "IA, IoT, Blockchain.", loc: "150 0" },
+        { key: "D3", text: "🔄 Sin Intermediarios", desc: "Contacto directo consumidor.", loc: "150 80" },
+        { key: "D4", text: "📈 Competencia", desc: "Estimula innovación.", loc: "300 0" },
+        { key: "D5", text: "🏢 Ejemplos", desc: "Spotify, Uber.", loc: "300 80" }
       ],
       linkDataArray: [
         { from: "D0", to: "D1" },
@@ -148,12 +150,12 @@
     },
     cola: {
       nodeDataArray: [
-        { key: "C0", text: "📦 Modelo Cola Larga", desc: "Amplia variedad, poca demanda por unidad." },
-        { key: "C1", text: "📊 Rompe Pareto", desc: "Más ventas fuera del 20% popular." },
-        { key: "C2", text: "🌐 Internet", desc: "Acceso global, sin límites." },
-        { key: "C3", text: "💸 Costos Bajos", desc: "Distribución digital." },
-        { key: "C4", text: "🎯 Nichos", desc: "Gustos específicos." },
-        { key: "C5", text: "🏢 Ejemplos", desc: "Amazon, Netflix, LEGO." }
+        { key: "C0", text: "📦 Cola Larga", desc: "Gran variedad, poca demanda.", loc: "0 0" },
+        { key: "C1", text: "📊 Rompe Pareto", desc: "80% ventas fuera del top.", loc: "150 -80" },
+        { key: "C2", text: "🌐 Internet", desc: "Acceso global.", loc: "150 0" },
+        { key: "C3", text: "💸 Costos", desc: "Digitalización reduce gastos.", loc: "150 80" },
+        { key: "C4", text: "🎯 Nichos", desc: "Atiende gustos específicos.", loc: "300 0" },
+        { key: "C5", text: "🏢 Ejemplos", desc: "Amazon, Netflix, LEGO.", loc: "300 80" }
       ],
       linkDataArray: [
         { from: "C0", to: "C1" },
@@ -165,12 +167,12 @@
     },
     plataforma: {
       nodeDataArray: [
-        { key: "P0", text: "🌐 Plataforma Multilateral", desc: "Conecta actores interdependientes." },
-        { key: "P1", text: "👥 Interacción", desc: "Segmentos colaboran." },
-        { key: "P2", text: "📡 Efecto Red", desc: "Más usuarios, más valor." },
-        { key: "P3", text: "💰 Costos Bajos", desc: "Sin inventario propio." },
-        { key: "P4", text: "📈 Escalable", desc: "Crecimiento exponencial." },
-        { key: "P5", text: "🏢 Ejemplos", desc: "Uber, Facebook, Airbnb." }
+        { key: "P0", text: "🌐 Plataforma", desc: "Conecta usuarios interdependientes.", loc: "0 0" },
+        { key: "P1", text: "👥 Interacción", desc: "Entre clientes, creadores.", loc: "150 -80" },
+        { key: "P2", text: "📡 Red", desc: "Más usuarios, más valor.", loc: "150 0" },
+        { key: "P3", text: "💰 Costos", desc: "Sin inventario propio.", loc: "150 80" },
+        { key: "P4", text: "📈 Escalable", desc: "Crecimiento exponencial.", loc: "300 0" },
+        { key: "P5", text: "🏢 Ejemplos", desc: "Airbnb, Uber, eBay.", loc: "300 80" }
       ],
       linkDataArray: [
         { from: "P0", to: "P1" },
@@ -182,21 +184,20 @@
     }
   };
 
-  let modeloActual = "disruptivo";
-
   function loadModel(nombre) {
     modeloActual = nombre;
     const saved = localStorage.getItem("modelo_" + nombre);
     if (saved) {
       diagram.model = go.Model.fromJson(saved);
     } else {
-      diagram.model = go.Model.fromJson(modelos[nombre]);
+      diagram.model = go.Model.fromJson(modelosBase[nombre]);
     }
   }
 
   function saveLayout() {
-    autoSave();
-    alert("✅ Mapa guardado con éxito.");
+    const json = diagram.model.toJson();
+    localStorage.setItem("modelo_" + modeloActual, json);
+    alert("✅ Mapa guardado.");
   }
 
   function autoSave() {
@@ -212,7 +213,7 @@
     link.click();
   }
 
-  // Cargar al inicio
+  // Cargar mapa inicial
   loadModel(modeloActual);
 </script>
 
