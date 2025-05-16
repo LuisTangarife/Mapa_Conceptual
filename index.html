@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Mapa Conceptual con Guardado</title>
+  <title>Mapa Conceptual con Posiciones Guardadas</title>
   <script src="https://unpkg.com/gojs@2.3.15/release/go.js"></script>
   <style>
     body {
@@ -83,19 +83,22 @@
     "undoManager.isEnabled": true
   });
 
-  // Nodo con descripción visible
+  // Nodo con texto + descripción + posición
   diagram.nodeTemplate =
     $(go.Node, "Auto",
       {
+        locationSpot: go.Spot.Center,
         doubleClick: (e, node) => {
           const nuevaDesc = prompt("Editar descripción:", node.data.desc || "");
           if (nuevaDesc !== null) {
             diagram.model.startTransaction("update");
             diagram.model.setDataProperty(node.data, "desc", nuevaDesc);
             diagram.model.commitTransaction("update");
+            autoSave();
           }
         }
       },
+      new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
       $(go.Shape, "RoundedRectangle",
         { fill: "#e6f0ff", stroke: "#004aad", strokeWidth: 2 }),
       $(go.Panel, "Vertical",
@@ -115,15 +118,25 @@
       $(go.Shape, { toArrow: "Standard" })
     );
 
+  // Guardar posición automáticamente al mover nodos
+  diagram.addDiagramListener("SelectionMoved", e => {
+    diagram.selection.each(node => {
+      if (node instanceof go.Node) {
+        diagram.model.setDataProperty(node.data, "loc", go.Point.stringify(node.location));
+      }
+    });
+    autoSave();
+  });
+
   const modelos = {
     disruptivo: {
       nodeDataArray: [
-        { key: "D0", text: "💡 Modelo Disruptivo", desc: "Rompe esquemas tradicionales con tecnología." },
-        { key: "D1", text: "🚀 Características", desc: "Transformación cultural, innovación acelerada, nuevas demandas." },
+        { key: "D0", text: "💡 Modelo Disruptivo", desc: "Rompe esquemas tradicionales." },
+        { key: "D1", text: "🚀 Características", desc: "Transformación cultural, nuevas demandas." },
         { key: "D2", text: "🤖 Tecnologías", desc: "IA, IoT, Blockchain." },
-        { key: "D3", text: "🔄 Sin Intermediarios", desc: "Contacto directo con consumidores." },
-        { key: "D4", text: "📈 Competencia", desc: "Estimula competencia y nuevos mercados." },
-        { key: "D5", text: "🏢 Ejemplos", desc: "Spotify, Uber, Amazon, Sharoo." }
+        { key: "D3", text: "🔄 Sin Intermediarios", desc: "Contacto directo consumidor." },
+        { key: "D4", text: "📈 Competencia", desc: "Estimula innovación." },
+        { key: "D5", text: "🏢 Ejemplos", desc: "Spotify, Netflix, Uber." }
       ],
       linkDataArray: [
         { from: "D0", to: "D1" },
@@ -135,11 +148,11 @@
     },
     cola: {
       nodeDataArray: [
-        { key: "C0", text: "📦 Modelo Cola Larga", desc: "Vende productos poco demandados, pero muchos." },
-        { key: "C1", text: "📊 Rompe Pareto", desc: "Importancia del 80% de productos menos vendidos." },
-        { key: "C2", text: "🌐 Internet", desc: "Permite visibilidad de variedad infinita." },
-        { key: "C3", text: "💸 Costos Bajos", desc: "Menor distribución/almacenamiento físico." },
-        { key: "C4", text: "🎯 Nichos", desc: "Se adapta a gustos minoritarios." },
+        { key: "C0", text: "📦 Modelo Cola Larga", desc: "Amplia variedad, poca demanda por unidad." },
+        { key: "C1", text: "📊 Rompe Pareto", desc: "Más ventas fuera del 20% popular." },
+        { key: "C2", text: "🌐 Internet", desc: "Acceso global, sin límites." },
+        { key: "C3", text: "💸 Costos Bajos", desc: "Distribución digital." },
+        { key: "C4", text: "🎯 Nichos", desc: "Gustos específicos." },
         { key: "C5", text: "🏢 Ejemplos", desc: "Amazon, Netflix, LEGO." }
       ],
       linkDataArray: [
@@ -152,12 +165,12 @@
     },
     plataforma: {
       nodeDataArray: [
-        { key: "P0", text: "🌐 Plataforma Multilateral", desc: "Conecta grupos interdependientes." },
-        { key: "P1", text: "👥 Interacción", desc: "Usuarios, creadores, clientes se conectan." },
-        { key: "P2", text: "📡 Efecto Red", desc: "Más usuarios, más valor para todos." },
-        { key: "P3", text: "💰 Costos Bajos", desc: "No requiere fabricar o almacenar." },
-        { key: "P4", text: "📈 Escalable", desc: "Puede crecer de forma exponencial." },
-        { key: "P5", text: "🏢 Ejemplos", desc: "Uber, Airbnb, eBay, Facebook." }
+        { key: "P0", text: "🌐 Plataforma Multilateral", desc: "Conecta actores interdependientes." },
+        { key: "P1", text: "👥 Interacción", desc: "Segmentos colaboran." },
+        { key: "P2", text: "📡 Efecto Red", desc: "Más usuarios, más valor." },
+        { key: "P3", text: "💰 Costos Bajos", desc: "Sin inventario propio." },
+        { key: "P4", text: "📈 Escalable", desc: "Crecimiento exponencial." },
+        { key: "P5", text: "🏢 Ejemplos", desc: "Uber, Facebook, Airbnb." }
       ],
       linkDataArray: [
         { from: "P0", to: "P1" },
@@ -174,17 +187,21 @@
   function loadModel(nombre) {
     modeloActual = nombre;
     const saved = localStorage.getItem("modelo_" + nombre);
-    diagram.model = go.Model.fromJson(saved || modelos[nombre]);
+    if (saved) {
+      diagram.model = go.Model.fromJson(saved);
+    } else {
+      diagram.model = go.Model.fromJson(modelos[nombre]);
+    }
   }
 
   function saveLayout() {
-    diagram.nodes.each(node => {
-      const pos = node.location;
-      diagram.model.setDataProperty(node.data, "loc", go.Point.stringify(pos));
-    });
+    autoSave();
+    alert("✅ Mapa guardado con éxito.");
+  }
+
+  function autoSave() {
     const json = diagram.model.toJson();
     localStorage.setItem("modelo_" + modeloActual, json);
-    alert("🧠 Mapa guardado correctamente.");
   }
 
   function saveAsImage() {
@@ -195,9 +212,10 @@
     link.click();
   }
 
-  // Cargar automáticamente el primero
+  // Cargar al inicio
   loadModel(modeloActual);
 </script>
 
 </body>
 </html>
+
