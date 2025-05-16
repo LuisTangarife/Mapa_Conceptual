@@ -1,106 +1,85 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mapa Conceptual - Modelos de Negocio</title>
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.3/dist/mermaid.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapas Conceptuales - Modelos de Negocio</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #fefefe;
+      color: #444;
       margin: 0;
       padding: 2rem;
-      color: #333;
     }
     h1 {
       text-align: center;
+      margin-bottom: 1rem;
       color: #577590;
     }
-    .mermaid {
-      background-color: #f3f4f6;
+    .mapa {
+      background-color: #f2f0f8;
       border-radius: 1rem;
       padding: 2rem;
       margin-bottom: 2rem;
-      overflow-x: auto;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-    .info-box {
-      display: none;
+    .concepto {
+      background-color: #b5ead7;
       padding: 1rem;
-      background-color: #e0f7fa;
-      border-left: 5px solid #26c6da;
-      margin-bottom: 2rem;
+      border-radius: 1rem;
+      margin-bottom: 1rem;
+    }
+    .subconcepto {
+      background-color: #fbc4ab;
+      padding: 0.8rem;
+      border-left: 5px solid #ffb4a2;
+      margin: 0.5rem 0;
     }
   </style>
-  <script>
-    mermaid.initialize({ startOnLoad: true });
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('g.node').forEach((el) => {
-        el.style.cursor = 'pointer';
-        el.addEventListener('click', () => {
-          const id = el.id.toLowerCase();
-          document.querySelectorAll('.info-box').forEach(box => box.style.display = 'none');
-          const info = document.getElementById(`info-${id}`);
-          if (info) info.style.display = 'block';
-        });
-      });
-    });
-  </script>
 </head>
 <body>
-  <h1>Mapa Conceptual: Modelos de Negocio</h1>
+  <h1>Mapas Conceptuales - Modelos de Negocio</h1>
 
-  <div class="mermaid">
-    graph TD
-      A[Modelos de Negocio] --> B[Disruptivo]
-      A --> C[Cola Larga]
-      A --> D[Plataforma Multilateral]
-
-      B --> B1[Innovación Disruptiva]
-      B --> B2[Características]
-      B --> B3[Ejemplos]
-
-      B1 --> B1a[Romper esquemas]
-      B1 --> B1b[Tecnologías emergentes]
-
-      B2 --> B2a[Transformación cultural]
-      B2 --> B2b[Nuevas demandas]
-      B2 --> B2c[Aumenta competencia]
-
-      B3 --> B3a[Spotify]
-      B3 --> B3b[Uber]
-      B3 --> B3c[Tesla]
-
-      C --> C1[Gran variedad]
-      C --> C2[Soporte digital]
-      C --> C3[Ejemplos]
-
-      C1 --> C1a[Baja demanda]
-      C2 --> C2a[Reducción de costos]
-      C3 --> C3a[Amazon]
-      C3 --> C3b[LEGO]
-
-      D --> D1[Interacción usuarios]
-      D --> D2[Efecto red]
-      D --> D3[Tipos]
-      D --> D4[Ejemplos]
-
-      D3 --> D3a[Marketplace]
-      D3 --> D3b[Redes sociales]
-      D4 --> D4a[Airbnb]
-      D4 --> D4b[Facebook]
+  <div class="mapa">
+    <h2>Modelo de Negocio Disruptivo</h2>
+    <div class="concepto">Innovación Disruptiva</div>
+    <div class="subconcepto">Ruptura con lo tradicional</div>
+    <div class="subconcepto">Optimización de procesos</div>
+    <div class="subconcepto">Tecnologías emergentes (IA, IoT, Blockchain)</div>
+    <div class="concepto">Características</div>
+    <div class="subconcepto">Transformación cultural</div>
+    <div class="subconcepto">Nuevas formas de demanda</div>
+    <div class="subconcepto">Competencia estimulada</div>
+    <div class="concepto">Ejemplos</div>
+    <div class="subconcepto">Spotify, Uber, Tesla, Airbnb</div>
   </div>
 
-  <div id="info-b" class="info-box">
-    <strong>Modelo Disruptivo:</strong> Rompe con los modelos tradicionales usando tecnología como IA, IoT, Blockchain. Su foco es cambiar radicalmente procesos y estructuras de mercado.
+  <div class="mapa">
+    <h2>Modelo de Cola Larga (Long Tail)</h2>
+    <div class="concepto">Diversificación de productos</div>
+    <div class="subconcepto">Muchos productos de baja demanda</div>
+    <div class="subconcepto">Reducción de costos de almacenamiento</div>
+    <div class="concepto">Tecnología como facilitador</div>
+    <div class="subconcepto">Plataformas digitales</div>
+    <div class="subconcepto">Acceso a herramientas de autor</div>
+    <div class="concepto">Ejemplos</div>
+    <div class="subconcepto">Amazon, Netflix, LEGO</div>
   </div>
-  <div id="info-c" class="info-box">
-    <strong>Modelo de Cola Larga:</strong> Vende productos en pequeñas cantidades pero de gran variedad, aprovechando las plataformas digitales para minimizar costos.
+
+  <div class="mapa">
+    <h2>Modelos Plataforma Multilaterales</h2>
+    <div class="concepto">Interacción entre usuarios</div>
+    <div class="subconcepto">Efecto red</div>
+    <div class="subconcepto">Segmentos interdependientes</div>
+    <div class="concepto">Tipos</div>
+    <div class="subconcepto">Marketplace (Amazon, eBay)</div>
+    <div class="subconcepto">Plataformas compartidas (Airbnb, Uber)</div>
+    <div class="concepto">Ventajas</div>
+    <div class="subconcepto">Bajos costos de operación</div>
+    <div class="subconcepto">Valor para todas las partes</div>
   </div>
-  <div id="info-d" class="info-box">
-    <strong>Modelo Plataforma Multilateral:</strong> Reúne usuarios que interactúan entre sí, generando valor mediante efectos de red. Ejemplos son Uber, Airbnb, Facebook.
-  </div>
+
 </body>
 </html>
-
 
