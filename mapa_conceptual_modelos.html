@@ -7,71 +7,69 @@
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
+      background: #f2f6fc;
       margin: 0;
       padding: 0;
-      background: #f1f5f9;
     }
     header {
-      background-color: #004aad;
+      background: #004aad;
       color: white;
-      padding: 1rem;
       text-align: center;
+      padding: 1rem;
     }
     nav {
       display: flex;
       justify-content: center;
-      background-color: #e0e0e0;
+      background: #e6eefc;
       padding: 1rem;
       gap: 1rem;
     }
     nav button {
-      padding: 0.6rem 1rem;
+      padding: 0.5rem 1rem;
       border: none;
+      background: #cce0ff;
+      font-weight: bold;
       border-radius: 6px;
       cursor: pointer;
-      font-weight: bold;
     }
     nav button:hover {
-      background-color: #ccc;
+      background: #aacbff;
     }
     #diagramDiv {
       width: 100%;
       height: 80vh;
-      border-top: 1px solid #ccc;
+      border-top: 2px solid #ccc;
     }
     .controls {
       text-align: center;
       padding: 1rem;
-      background: #fff;
     }
     .controls button {
-      margin: 0.5rem;
-      padding: 0.5rem 1rem;
       background: #004aad;
       color: white;
       border: none;
+      padding: 0.5rem 1rem;
       border-radius: 6px;
       cursor: pointer;
-    }
-    .controls button:hover {
-      background-color: #003580;
+      margin: 0.5rem;
     }
   </style>
 </head>
 <body>
+
   <header>
-    <h1>Mapa Conceptual Interactivo - Modelos de Negocio</h1>
+    <h1>🧠 Mapa Conceptual Interactivo - Modelos de Negocio</h1>
   </header>
 
   <nav>
-    <button onclick="loadModel('disruptivo')">Modelo Disruptivo</button>
-    <button onclick="loadModel('cola')">Modelo de Cola Larga</button>
-    <button onclick="loadModel('plataforma')">Modelo Plataforma Multilateral</button>
+    <button onclick="loadModel('disruptivo')">💡 Disruptivo</button>
+    <button onclick="loadModel('cola')">📦 Cola Larga</button>
+    <button onclick="loadModel('plataforma')">🌐 Plataforma Multilateral</button>
   </nav>
 
   <div class="controls">
-    <button onclick="saveAsImage()">Exportar como Imagen</button>
-    <button onclick="window.print()">Exportar como PDF</button>
+    <button onclick="saveAsImage()">📸 Exportar como Imagen</button>
+    <button onclick="window.print()">🖨️ Imprimir como PDF</button>
   </div>
 
   <div id="diagramDiv"></div>
@@ -79,35 +77,32 @@
   <script>
     const $ = go.GraphObject.make;
     const diagram = $(go.Diagram, "diagramDiv", {
-      "undoManager.isEnabled": true,
-      layout: $(go.ForceDirectedLayout)
+      layout: $(go.ForceDirectedLayout),
+      "undoManager.isEnabled": true
     });
 
     diagram.nodeTemplate =
       $(go.Node, "Auto",
         {
           resizable: true, resizeObjectName: "SHAPE",
-          toolTip:
-            $("ToolTip",
-              $(go.TextBlock, { margin: 4 },
-                new go.Binding("text", "desc"))
-            ),
           doubleClick: function (e, node) {
-            const nota = prompt("Escribe o edita tu nota:", node.data.desc || "");
+            const nota = prompt("Escribe una nota personal:", node.data.desc || "");
             if (nota !== null) {
-              diagram.model.startTransaction("update");
+              diagram.model.startTransaction("edit");
               diagram.model.setDataProperty(node.data, "desc", nota);
-              diagram.model.commitTransaction("update");
+              diagram.model.commitTransaction("edit");
               localStorage.setItem(node.data.key, nota);
             }
-          }
+          },
+          toolTip:
+            $("ToolTip",
+              $(go.TextBlock, { margin: 6 }, new go.Binding("text", "desc"))
+            )
         },
         $(go.Shape, "RoundedRectangle",
-          {
-            name: "SHAPE", fill: "#cce5ff", strokeWidth: 0
-          }),
+          { name: "SHAPE", fill: "#e6f0ff", stroke: "#004aad", strokeWidth: 2 }),
         $(go.TextBlock,
-          { margin: 8, editable: false, font: "bold 14px sans-serif" },
+          { margin: 8, font: "bold 13px sans-serif" },
           new go.Binding("text", "text"))
       );
 
@@ -118,80 +113,84 @@
         $(go.Shape, { toArrow: "Standard" })
       );
 
+    // Modelos
     const modelos = {
       disruptivo: {
-        class: "go.GraphLinksModel",
         nodeDataArray: [
-          { key: "Disruptivo", text: "Modelo Disruptivo", desc: "Innovación que rompe el modelo tradicional" },
-          { key: "IA", text: "Inteligencia Artificial", desc: "Aprendizaje automático, automatización avanzada" },
-          { key: "Blockchain", text: "Blockchain", desc: "Transacciones seguras y descentralizadas" },
-          { key: "IoT", text: "Internet de las Cosas", desc: "Conectividad entre dispositivos" },
-          { key: "Cultura", text: "Cambio Cultural", desc: "Transformación organizacional" },
-          { key: "Demanda", text: "Nuevas Demandas", desc: "Nuevas formas de consumir y producir" }
+          { key: "D0", text: "💡 Modelo Disruptivo", desc: "Rompe esquemas tradicionales con tecnología." },
+          { key: "D1", text: "🚀 Características", desc: "Transformación cultural, innovación acelerada, nuevas demandas." },
+          { key: "D2", text: "🤖 Tecnologías", desc: "IA, IoT, Blockchain." },
+          { key: "D3", text: "🔄 Eliminación de Intermediarios", desc: "Facilita el contacto directo con el consumidor." },
+          { key: "D4", text: "📈 Estimula la Competencia", desc: "Cambia las reglas del juego en el mercado." },
+          { key: "D5", text: "🏢 Ejemplos", desc: "Spotify, Netflix, Uber, Amazon, Sharoo." }
         ],
         linkDataArray: [
-          { from: "Disruptivo", to: "IA" },
-          { from: "Disruptivo", to: "Blockchain" },
-          { from: "Disruptivo", to: "IoT" },
-          { from: "Disruptivo", to: "Cultura" },
-          { from: "Disruptivo", to: "Demanda" }
+          { from: "D0", to: "D1" },
+          { from: "D0", to: "D2" },
+          { from: "D0", to: "D3" },
+          { from: "D0", to: "D4" },
+          { from: "D0", to: "D5" }
         ]
       },
+
       cola: {
-        class: "go.GraphLinksModel",
         nodeDataArray: [
-          { key: "Cola", text: "Modelo de Cola Larga", desc: "Vender más variedad en pequeñas cantidades" },
-          { key: "Internet", text: "Internet", desc: "Acceso global y sin límites físicos" },
-          { key: "Costos", text: "Reducción de Costos", desc: "Distribución digital eficiente" },
-          { key: "Democratización", text: "Democratización", desc: "Acceso a herramientas de autor" },
-          { key: "Amazon", text: "Amazon", desc: "Ejemplo clásico con libros de baja demanda" },
-          { key: "LEGO", text: "LEGO", desc: "Kits personalizados por usuarios" }
+          { key: "C0", text: "📦 Modelo Cola Larga", desc: "Vende muchos productos de baja demanda." },
+          { key: "C1", text: "📊 Rompe Pareto", desc: "80% de los ingresos no proviene solo del 20%." },
+          { key: "C2", text: "🌐 Internet", desc: "Permite alcance y diversidad global." },
+          { key: "C3", text: "💸 Costos Bajos", desc: "Distribución/almacenamiento digital." },
+          { key: "C4", text: "🎨 Personalización", desc: "Adaptado a nichos minoritarios." },
+          { key: "C5", text: "🏢 Ejemplos", desc: "Amazon (libros), Netflix (indie), LEGO (kits personalizados)." }
         ],
         linkDataArray: [
-          { from: "Cola", to: "Internet" },
-          { from: "Cola", to: "Costos" },
-          { from: "Cola", to: "Democratización" },
-          { from: "Cola", to: "Amazon" },
-          { from: "Cola", to: "LEGO" }
+          { from: "C0", to: "C1" },
+          { from: "C0", to: "C2" },
+          { from: "C0", to: "C3" },
+          { from: "C0", to: "C4" },
+          { from: "C0", to: "C5" }
         ]
       },
+
       plataforma: {
-        class: "go.GraphLinksModel",
         nodeDataArray: [
-          { key: "Plataforma", text: "Modelo Multilateral", desc: "Interacción entre múltiples actores" },
-          { key: "Red", text: "Efecto Red", desc: "Más usuarios = más valor" },
-          { key: "Usuarios", text: "Usuarios", desc: "Clientes interdependientes" },
-          { key: "Marketplace", text: "Marketplace", desc: "Amazon, eBay, Airbnb, Uber" },
-          { key: "Redes", text: "Redes Sociales", desc: "Facebook, Instagram" }
+          { key: "P0", text: "🌐 Modelo Plataforma", desc: "Conecta grupos interdependientes para generar valor." },
+          { key: "P1", text: "👥 Interacción", desc: "Segmentos que se benefician unos de otros." },
+          { key: "P2", text: "📡 Efecto Red", desc: "Más usuarios = más valor." },
+          { key: "P3", text: "💰 Costos Bajos", desc: "No requiere fabricar o almacenar productos." },
+          { key: "P4", text: "📈 Escalabilidad", desc: "Puede crecer rápidamente." },
+          { key: "P5", text: "🏢 Ejemplos", desc: "Amazon, eBay, Airbnb, Uber, Facebook, Instagram." }
         ],
         linkDataArray: [
-          { from: "Plataforma", to: "Red" },
-          { from: "Plataforma", to: "Usuarios" },
-          { from: "Plataforma", to: "Marketplace" },
-          { from: "Plataforma", to: "Redes" }
+          { from: "P0", to: "P1" },
+          { from: "P0", to: "P2" },
+          { from: "P0", to: "P3" },
+          { from: "P0", to: "P4" },
+          { from: "P0", to: "P5" }
         ]
       }
     };
 
-    function loadModel(name) {
-      diagram.model = go.Model.fromJson(modelos[name]);
+    function loadModel(tipo) {
+      diagram.model = go.Model.fromJson(modelos[tipo]);
       diagram.nodes.each(node => {
-        const saved = localStorage.getItem(node.data.key);
-        if (saved) node.data.desc = saved;
+        const nota = localStorage.getItem(node.data.key);
+        if (nota) diagram.model.setDataProperty(node.data, "desc", nota);
       });
     }
 
     function saveAsImage() {
-      const img = diagram.makeImageData({ background: "white", scale: 1 });
+      const img = diagram.makeImageData({ scale: 1, background: "white" });
       const link = document.createElement("a");
       link.download = "mapa_modelo.png";
       link.href = img;
       link.click();
     }
 
-    // Cargar modelo inicial
+    // Carga inicial
     loadModel("disruptivo");
   </script>
+
 </body>
 </html>
+
 
