@@ -1,84 +1,93 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mapas Conceptuales - Modelos de Negocio</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapas Conceptuales - Interactivos</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #fefefe;
-      color: #444;
+      color: #333;
       margin: 0;
       padding: 2rem;
     }
     h1 {
       text-align: center;
-      margin-bottom: 1rem;
       color: #577590;
     }
-    .mapa {
-      background-color: #f2f0f8;
+    .mermaid {
+      background-color: #f3f4f6;
       border-radius: 1rem;
       padding: 2rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin-bottom: 3rem;
+      overflow-x: auto;
     }
-    .concepto {
-      background-color: #b5ead7;
+    .description {
+      display: none;
       padding: 1rem;
-      border-radius: 1rem;
-      margin-bottom: 1rem;
-    }
-    .subconcepto {
-      background-color: #fbc4ab;
-      padding: 0.8rem;
-      border-left: 5px solid #ffb4a2;
-      margin: 0.5rem 0;
+      background-color: #e3f2fd;
+      border-left: 5px solid #64b5f6;
+      margin-bottom: 2rem;
     }
   </style>
+  <script>
+    mermaid.initialize({ startOnLoad: true });
+    function toggleDescription(id) {
+      const el = document.getElementById(id);
+      el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+  </script>
 </head>
 <body>
-  <h1>Mapas Conceptuales - Modelos de Negocio</h1>
+  <h1>Mapas Conceptuales - Interactivos</h1>
 
-  <div class="mapa">
-    <h2>Modelo de Negocio Disruptivo</h2>
-    <div class="concepto">Innovación Disruptiva</div>
-    <div class="subconcepto">Ruptura con lo tradicional</div>
-    <div class="subconcepto">Optimización de procesos</div>
-    <div class="subconcepto">Tecnologías emergentes (IA, IoT, Blockchain)</div>
-    <div class="concepto">Características</div>
-    <div class="subconcepto">Transformación cultural</div>
-    <div class="subconcepto">Nuevas formas de demanda</div>
-    <div class="subconcepto">Competencia estimulada</div>
-    <div class="concepto">Ejemplos</div>
-    <div class="subconcepto">Spotify, Uber, Tesla, Airbnb</div>
+  <div class="mermaid">
+    graph TD
+      A[Modelo Disruptivo] --> B(Innovación Disruptiva)
+      A --> C(Características)
+      A --> D(Ejemplos)
+      B --> B1[Optimización de procesos]
+      B --> B2[IA, IoT, Blockchain]
+      C --> C1[Transformación cultural]
+      C --> C2[Competencia]
+      D --> D1[Spotify]
+      D --> D2[Uber]
+      D --> D3[Tesla]
+      click A call toggleDescription("desc-disruptivo")
+  </div>
+  <div id="desc-disruptivo" class="description">
+    <strong>Modelo Disruptivo:</strong> Modelo que rompe esquemas tradicionales usando tecnologías emergentes. Impacta mercados, sociedad y cultura.
   </div>
 
-  <div class="mapa">
-    <h2>Modelo de Cola Larga (Long Tail)</h2>
-    <div class="concepto">Diversificación de productos</div>
-    <div class="subconcepto">Muchos productos de baja demanda</div>
-    <div class="subconcepto">Reducción de costos de almacenamiento</div>
-    <div class="concepto">Tecnología como facilitador</div>
-    <div class="subconcepto">Plataformas digitales</div>
-    <div class="subconcepto">Acceso a herramientas de autor</div>
-    <div class="concepto">Ejemplos</div>
-    <div class="subconcepto">Amazon, Netflix, LEGO</div>
+  <div class="mermaid">
+    graph TD
+      E[Modelo Cola Larga] --> F(Diversificación)
+      E --> G(Tecnología)
+      E --> H(Ejemplos)
+      F --> F1[Baja demanda, muchos productos]
+      G --> G1[Reducción de costos]
+      H --> H1[Amazon]
+      H --> H2[Netflix]
+      click E call toggleDescription("desc-cola")
+  </div>
+  <div id="desc-cola" class="description">
+    <strong>Modelo de Cola Larga:</strong> Vender muchos productos de baja demanda gracias a la tecnología digital. Democratiza la producción.
   </div>
 
-  <div class="mapa">
-    <h2>Modelos Plataforma Multilaterales</h2>
-    <div class="concepto">Interacción entre usuarios</div>
-    <div class="subconcepto">Efecto red</div>
-    <div class="subconcepto">Segmentos interdependientes</div>
-    <div class="concepto">Tipos</div>
-    <div class="subconcepto">Marketplace (Amazon, eBay)</div>
-    <div class="subconcepto">Plataformas compartidas (Airbnb, Uber)</div>
-    <div class="concepto">Ventajas</div>
-    <div class="subconcepto">Bajos costos de operación</div>
-    <div class="subconcepto">Valor para todas las partes</div>
+  <div class="mermaid">
+    graph TD
+      I[Modelo Plataforma Multilateral] --> J(Efecto Red)
+      I --> K(Segmentos)
+      I --> L(Ejemplos)
+      K --> K1[Clientes interdependientes]
+      L --> L1[Amazon]
+      L --> L2[Airbnb]
+      click I call toggleDescription("desc-plataforma")
   </div>
-
+  <div id="desc-plataforma" class="description">
+    <strong>Modelo Plataforma Multilateral:</strong> Reúne varios segmentos de usuarios en una misma plataforma para crear valor a través de la interacción.
+  </div>
 </body>
 </html>
