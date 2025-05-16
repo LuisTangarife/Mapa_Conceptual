@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mapa Conceptual - Modelos de Negocio</title>
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.3/dist/mermaid.min.js"></script>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #fefefe;
-      color: #333;
       margin: 0;
       padding: 2rem;
+      color: #333;
     }
     h1 {
       text-align: center;
@@ -21,10 +21,10 @@
       background-color: #f3f4f6;
       border-radius: 1rem;
       padding: 2rem;
-      margin-bottom: 3rem;
+      margin-bottom: 2rem;
       overflow-x: auto;
     }
-    .description {
+    .info-box {
       display: none;
       padding: 1rem;
       background-color: #e0f7fa;
@@ -34,77 +34,74 @@
   </style>
   <script>
     mermaid.initialize({ startOnLoad: true });
-    function toggleDescription(id) {
-      document.querySelectorAll('.description').forEach(el => el.style.display = 'none');
-      const el = document.getElementById(id);
-      if (el) el.style.display = 'block';
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('g.node').forEach((el) => {
+        el.style.cursor = 'pointer';
+        el.addEventListener('click', () => {
+          const id = el.id.toLowerCase();
+          document.querySelectorAll('.info-box').forEach(box => box.style.display = 'none');
+          const info = document.getElementById(`info-${id}`);
+          if (info) info.style.display = 'block';
+        });
+      });
+    });
   </script>
 </head>
 <body>
-  <h1>Mapa Conceptual de Modelos de Negocio</h1>
+  <h1>Mapa Conceptual: Modelos de Negocio</h1>
 
   <div class="mermaid">
     graph TD
       A[Modelos de Negocio] --> B[Disruptivo]
-      A --> C[Cola Larga (Long Tail)]
+      A --> C[Cola Larga]
       A --> D[Plataforma Multilateral]
 
       B --> B1[Innovación Disruptiva]
-      B --> B2[Impacto Tecnológico]
-      B --> B3[Características]
-      B --> B4[Ejemplos]
-      B1 --> B1a[Rompe esquemas tradicionales]
-      B1 --> B1b[Optimiza procesos, IA, IoT, Blockchain]
-      B2 --> B2a[Digitalización corporativa]
-      B2 --> B2b[Economía de plataformas]
-      B2 --> B2c[Modelo centralizado y descentralizado]
-      B2 --> B2d[Economía efímera]
-      B3 --> B3a[Transformación cultural]
-      B3 --> B3b[Nuevas demandas y procesos]
-      B3 --> B3c[Aumento de competencia]
-      B4 --> B4a[Spotify, Uber, Tesla, Airbnb, Google, Netflix]
+      B --> B2[Características]
+      B --> B3[Ejemplos]
 
-      C --> C1[Venta en pequeñas cantidades]
-      C --> C2[Soporte Tecnológico]
+      B1 --> B1a[Romper esquemas]
+      B1 --> B1b[Tecnologías emergentes]
+
+      B2 --> B2a[Transformación cultural]
+      B2 --> B2b[Nuevas demandas]
+      B2 --> B2c[Aumenta competencia]
+
+      B3 --> B3a[Spotify]
+      B3 --> B3b[Uber]
+      B3 --> B3c[Tesla]
+
+      C --> C1[Gran variedad]
+      C --> C2[Soporte digital]
       C --> C3[Ejemplos]
-      C1 --> C1a[Muchos productos con baja demanda]
-      C1 --> C1b[Eliminación de intermediarios]
-      C2 --> C2a[Menores costos de almacenamiento y distribución]
-      C2 --> C2b[Democratización de medios y herramientas de autor]
-      C3 --> C3a[Amazon, Netflix, LEGO]
 
-      D --> D1[Interacción entre usuarios]
-      D --> D2[Efecto Red]
-      D --> D3[Tipos de plataformas]
+      C1 --> C1a[Baja demanda]
+      C2 --> C2a[Reducción de costos]
+      C3 --> C3a[Amazon]
+      C3 --> C3b[LEGO]
+
+      D --> D1[Interacción usuarios]
+      D --> D2[Efecto red]
+      D --> D3[Tipos]
       D --> D4[Ejemplos]
-      D1 --> D1a[Segmentos interdependientes]
-      D1 --> D1b[Creación de valor compartido]
-      D2 --> D2a[Efectos directos e indirectos]
-      D3 --> D3a[Marketplace, economía compartida]
-      D3 --> D3b[Redes sociales y contenido]
-      D4 --> D4a[Airbnb, Uber, Amazon, eBay, Facebook, Instagram]
 
-      click B call toggleDescription("desc-disruptivo")
-      click C call toggleDescription("desc-cola")
-      click D call toggleDescription("desc-plataforma")
+      D3 --> D3a[Marketplace]
+      D3 --> D3b[Redes sociales]
+      D4 --> D4a[Airbnb]
+      D4 --> D4b[Facebook]
   </div>
 
-  <div id="desc-disruptivo" class="description">
-    <strong>Modelo Disruptivo:</strong><br>
-    Se basa en la innovación que rompe esquemas tradicionales, introduciendo nuevas formas de producir, distribuir y consumir bienes y servicios mediante tecnologías emergentes como la inteligencia artificial, blockchain, IoT y plataformas digitales. Tiene un gran impacto cultural y económico.
+  <div id="info-b" class="info-box">
+    <strong>Modelo Disruptivo:</strong> Rompe con los modelos tradicionales usando tecnología como IA, IoT, Blockchain. Su foco es cambiar radicalmente procesos y estructuras de mercado.
   </div>
-
-  <div id="desc-cola" class="description">
-    <strong>Modelo de Cola Larga:</strong><br>
-    Busca vender una gran variedad de productos en pequeñas cantidades, apoyándose en tecnologías digitales que reducen los costos logísticos. Democratiza la producción y distribución, permitiendo que los productos de nicho sean rentables.
+  <div id="info-c" class="info-box">
+    <strong>Modelo de Cola Larga:</strong> Vende productos en pequeñas cantidades pero de gran variedad, aprovechando las plataformas digitales para minimizar costos.
   </div>
-
-  <div id="desc-plataforma" class="description">
-    <strong>Modelo de Plataforma Multilateral:</strong><br>
-    Conecta distintos tipos de usuarios para que intercambien bienes o servicios. Cuantos más usuarios tiene la plataforma, mayor es su valor (efecto red). Su valor radica en generar beneficios para todos los participantes, como compradores y vendedores.
+  <div id="info-d" class="info-box">
+    <strong>Modelo Plataforma Multilateral:</strong> Reúne usuarios que interactúan entre sí, generando valor mediante efectos de red. Ejemplos son Uber, Airbnb, Facebook.
   </div>
-
+</body>
+</html>
 </body>
 </html>
 
