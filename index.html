@@ -3,125 +3,135 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Guía de Modelos de Negocio</title>
+  <title>Modelos de Negocio Interactivos</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f4f9;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
       margin: 0;
       padding: 0;
+      color: #333;
     }
-
     header {
-      background-color: #4a90e2;
+      background: #004aad;
       color: white;
-      padding: 1.5rem;
+      padding: 1rem;
       text-align: center;
     }
-
     main {
       padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
+      max-width: 1000px;
+      margin: auto;
     }
-
-    .card {
+    .tarjeta {
       background: white;
       border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      padding: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      transition: all 0.3s ease;
     }
-
     .concepto-principal {
-      cursor: pointer;
-      background-color: #e3f2fd;
+      background: #004aad;
+      color: white;
       padding: 1rem;
-      border-radius: 8px;
-      font-weight: bold;
+      cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: bold;
     }
-
-    .contenido-oculto {
+    .contenido {
       display: none;
-      margin-top: 1rem;
+      padding: 1rem;
+      animation: fadeIn 0.3s ease-in-out;
     }
-
-    .contenido-oculto.show {
+    .contenido.show {
       display: block;
     }
-
     .toggle-icon {
       transition: transform 0.3s ease;
     }
-
     .toggle-icon.rotated {
       transform: rotate(90deg);
     }
-
     textarea {
       width: 100%;
-      min-height: 80px;
+      height: 100px;
       margin-top: 1rem;
-      padding: 0.75rem;
+      border-radius: 6px;
       border: 1px solid #ccc;
-      border-radius: 8px;
+      padding: 0.5rem;
       resize: vertical;
     }
-
     button.btn-guardar {
-      background-color: #4caf50;
+      margin-top: 0.5rem;
+      background: #004aad;
       color: white;
       border: none;
       padding: 0.5rem 1rem;
-      margin-top: 0.5rem;
       border-radius: 6px;
       cursor: pointer;
     }
-
     button.btn-guardar:hover {
-      background-color: #45a049;
+      background: #003580;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Guía Interactiva de Modelos de Negocio</h1>
-    <p>Haz clic en cada sección para explorar los conceptos y tomar notas</p>
+    <h1>Modelos de Negocio Interactivos</h1>
+    <p>Haz clic en un modelo para explorarlo y tomar notas</p>
   </header>
 
   <main>
-    <section class="card">
-      <div class="concepto-principal" data-target="modelo-tradicional">
+    <!-- Tarjeta: Modelo de Negocio Tradicional -->
+    <section class="tarjeta">
+      <div class="concepto-principal" data-target="contenido1">
         Modelo de Negocio Tradicional
         <span class="toggle-icon">▶</span>
       </div>
-      <div class="contenido-oculto" id="modelo-tradicional">
+      <div class="contenido" id="contenido1">
         <p>
-          Se basa en la oferta de productos o servicios a través de estructuras organizativas jerárquicas y canales físicos o formales. Se centra en procesos estables y una cadena de valor definida.
+          Este modelo se basa en la venta directa de productos o servicios. El negocio genera ingresos al ofrecer un bien tangible o intangible al cliente a cambio de dinero.
         </p>
-        <textarea id="nota-tradicional" placeholder="Escribe tus notas aquí..."></textarea>
-        <button class="btn-guardar" data-textarea="nota-tradicional">Guardar Nota</button>
+        <ul>
+          <li><strong>Ejemplo:</strong> Tiendas físicas, restaurantes, ferreterías.</li>
+          <li><strong>Ventajas:</strong> Sencillez, control del proceso completo.</li>
+          <li><strong>Desventajas:</strong> Costos fijos elevados, dificultad para escalar.</li>
+        </ul>
+        <label for="nota1"><strong>Mis notas:</strong></label>
+        <textarea id="nota1" placeholder="Escribe tus observaciones aquí..."></textarea>
+        <button class="btn-guardar" data-textarea="nota1">Guardar Nota</button>
       </div>
     </section>
 
-    <section class="card">
-      <div class="concepto-principal" data-target="modelo-digital">
-        Modelo de Negocio Digital
+    <!-- Tarjeta: Modelo de Suscripción -->
+    <section class="tarjeta">
+      <div class="concepto-principal" data-target="contenido2">
+        Modelo de Suscripción
         <span class="toggle-icon">▶</span>
       </div>
-      <div class="contenido-oculto" id="modelo-digital">
+      <div class="contenido" id="contenido2">
         <p>
-          Aprovecha plataformas tecnológicas y medios digitales para generar valor. Puede incluir modelos como freemium, e-commerce, plataformas, SaaS, entre otros.
+          Este modelo cobra a los clientes de manera recurrente (mensual, anual) por el acceso a un producto o servicio.
         </p>
-        <textarea id="nota-digital" placeholder="Escribe tus notas aquí..."></textarea>
-        <button class="btn-guardar" data-textarea="nota-digital">Guardar Nota</button>
+        <ul>
+          <li><strong>Ejemplo:</strong> Netflix, Spotify, Adobe Creative Cloud.</li>
+          <li><strong>Ventajas:</strong> Flujo de ingresos constante, fidelización del cliente.</li>
+          <li><strong>Desventajas:</strong> Requiere valor constante para mantener suscriptores.</li>
+        </ul>
+        <label for="nota2"><strong>Mis notas:</strong></label>
+        <textarea id="nota2" placeholder="Escribe tus observaciones aquí..."></textarea>
+        <button class="btn-guardar" data-textarea="nota2">Guardar Nota</button>
       </div>
     </section>
 
-    <!-- Puedes añadir más tarjetas con otros modelos como Lean o Canvas aquí -->
+    <!-- Puedes agregar más tarjetas aquí, por ejemplo: Modelo Canvas, Lean Startup, etc. -->
 
   </main>
 
@@ -160,3 +170,4 @@
   </script>
 </body>
 </html>
+
