@@ -2,14 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Mapa Conceptual Guardado</title>
+  <title>Mapa Conceptual con Posición Guardada</title>
   <script src="https://unpkg.com/gojs@2.3.15/release/go.js"></script>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #f1f5fa;
       margin: 0;
-      padding: 0;
+      background: #f1f5fa;
     }
     header {
       background: #004aad;
@@ -25,15 +24,15 @@
       gap: 1rem;
     }
     nav button {
-      padding: 0.5rem 1rem;
+      background: #cde1ff;
       border: none;
+      padding: 0.6rem 1rem;
       border-radius: 6px;
-      cursor: pointer;
-      background: #d0e4ff;
       font-weight: bold;
+      cursor: pointer;
     }
     nav button:hover {
-      background: #a8cfff;
+      background: #a8cbff;
     }
     .controls {
       text-align: center;
@@ -83,16 +82,7 @@
     "undoManager.isEnabled": true
   });
 
-  // Actualiza loc en cada nodo
-  diagram.addDiagramListener("Modified", () => {
-    diagram.nodes.each(node => {
-      if (node instanceof go.Node) {
-        node.data.loc = go.Point.stringify(node.location);
-      }
-    });
-    autoSave();
-  });
-
+  // Nodo: posición, texto, descripción
   diagram.nodeTemplate =
     $(go.Node, "Auto",
       {
@@ -106,21 +96,24 @@
             diagram.model.startTransaction("edit");
             diagram.model.setDataProperty(node.data, "desc", nuevaDesc);
             diagram.model.commitTransaction("edit");
+            autoSave();
           }
         }
       },
-      $(go.Shape, "RoundedRectangle",
-        { fill: "#e6f0ff", stroke: "#004aad", strokeWidth: 2 }),
+      $(go.Shape, "RoundedRectangle", {
+        fill: "#e6f0ff", stroke: "#004aad", strokeWidth: 2
+      }),
       $(go.Panel, "Vertical",
         $(go.TextBlock,
-          { margin: 6, font: "bold 14px sans-serif", stroke: "#004aad", textAlign: "center" },
+          { margin: 6, font: "bold 14px sans-serif", stroke: "#004aad" },
           new go.Binding("text", "text")),
         $(go.TextBlock,
-          { margin: new go.Margin(2, 6, 6, 6), wrap: go.TextBlock.WrapFit, width: 200, stroke: "#333" },
+          { margin: 6, wrap: go.TextBlock.WrapFit, width: 200, stroke: "#333" },
           new go.Binding("text", "desc"))
       )
     );
 
+  // Links
   diagram.linkTemplate =
     $(go.Link,
       { routing: go.Link.AvoidsNodes, corner: 5 },
@@ -128,17 +121,28 @@
       $(go.Shape, { toArrow: "Standard" })
     );
 
-  let modeloActual = "disruptivo";
+  // 🟢 ACTUALIZA POSICIÓN AL MOVER
+  diagram.addDiagramListener("SelectionMoved", e => {
+    diagram.startTransaction("update positions");
+    diagram.selection.each(node => {
+      if (node instanceof go.Node) {
+        diagram.model.setDataProperty(node.data, "loc", go.Point.stringify(node.location));
+      }
+    });
+    diagram.commitTransaction("update positions");
+    autoSave();
+  });
 
+  // MODELOS BASE
   const modelosBase = {
     disruptivo: {
       nodeDataArray: [
-        { key: "D0", text: "💡 Modelo Disruptivo", desc: "Rompe esquemas tradicionales.", loc: "0 0" },
-        { key: "D1", text: "🚀 Características", desc: "Transformación cultural.", loc: "150 -80" },
+        { key: "D0", text: "💡 Disruptivo", desc: "Rompe esquemas tradicionales.", loc: "0 0" },
+        { key: "D1", text: "🚀 Características", desc: "Innovación, transformación.", loc: "150 -80" },
         { key: "D2", text: "🤖 Tecnologías", desc: "IA, IoT, Blockchain.", loc: "150 0" },
-        { key: "D3", text: "🔄 Sin Intermediarios", desc: "Contacto directo consumidor.", loc: "150 80" },
-        { key: "D4", text: "📈 Competencia", desc: "Estimula innovación.", loc: "300 0" },
-        { key: "D5", text: "🏢 Ejemplos", desc: "Spotify, Uber.", loc: "300 80" }
+        { key: "D3", text: "🔄 Sin Intermediarios", desc: "Directo al cliente.", loc: "150 80" },
+        { key: "D4", text: "📈 Competencia", desc: "Nuevos modelos de negocio.", loc: "300 0" },
+        { key: "D5", text: "🏢 Ejemplos", desc: "Spotify, Uber, Amazon.", loc: "300 80" }
       ],
       linkDataArray: [
         { from: "D0", to: "D1" },
@@ -150,11 +154,11 @@
     },
     cola: {
       nodeDataArray: [
-        { key: "C0", text: "📦 Cola Larga", desc: "Gran variedad, poca demanda.", loc: "0 0" },
-        { key: "C1", text: "📊 Rompe Pareto", desc: "80% ventas fuera del top.", loc: "150 -80" },
-        { key: "C2", text: "🌐 Internet", desc: "Acceso global.", loc: "150 0" },
-        { key: "C3", text: "💸 Costos", desc: "Digitalización reduce gastos.", loc: "150 80" },
-        { key: "C4", text: "🎯 Nichos", desc: "Atiende gustos específicos.", loc: "300 0" },
+        { key: "C0", text: "📦 Cola Larga", desc: "Muchos productos, baja demanda.", loc: "0 0" },
+        { key: "C1", text: "📊 Rompe Pareto", desc: "Más ingresos fuera del top 20%.", loc: "150 -80" },
+        { key: "C2", text: "🌐 Internet", desc: "Acceso ilimitado.", loc: "150 0" },
+        { key: "C3", text: "💸 Costos", desc: "Distribución y almacenamiento bajos.", loc: "150 80" },
+        { key: "C4", text: "🎯 Nichos", desc: "Gustos específicos.", loc: "300 0" },
         { key: "C5", text: "🏢 Ejemplos", desc: "Amazon, Netflix, LEGO.", loc: "300 80" }
       ],
       linkDataArray: [
@@ -167,10 +171,10 @@
     },
     plataforma: {
       nodeDataArray: [
-        { key: "P0", text: "🌐 Plataforma", desc: "Conecta usuarios interdependientes.", loc: "0 0" },
-        { key: "P1", text: "👥 Interacción", desc: "Entre clientes, creadores.", loc: "150 -80" },
-        { key: "P2", text: "📡 Red", desc: "Más usuarios, más valor.", loc: "150 0" },
-        { key: "P3", text: "💰 Costos", desc: "Sin inventario propio.", loc: "150 80" },
+        { key: "P0", text: "🌐 Plataforma", desc: "Conecta usuarios.", loc: "0 0" },
+        { key: "P1", text: "👥 Interacción", desc: "Segmentos interdependientes.", loc: "150 -80" },
+        { key: "P2", text: "📡 Red", desc: "Más usuarios = más valor.", loc: "150 0" },
+        { key: "P3", text: "💰 Costos", desc: "Sin producir ni almacenar.", loc: "150 80" },
         { key: "P4", text: "📈 Escalable", desc: "Crecimiento exponencial.", loc: "300 0" },
         { key: "P5", text: "🏢 Ejemplos", desc: "Airbnb, Uber, eBay.", loc: "300 80" }
       ],
@@ -184,14 +188,12 @@
     }
   };
 
+  let modeloActual = "disruptivo";
+
   function loadModel(nombre) {
     modeloActual = nombre;
     const saved = localStorage.getItem("modelo_" + nombre);
-    if (saved) {
-      diagram.model = go.Model.fromJson(saved);
-    } else {
-      diagram.model = go.Model.fromJson(modelosBase[nombre]);
-    }
+    diagram.model = go.Model.fromJson(saved || modelosBase[nombre]);
   }
 
   function saveLayout() {
@@ -213,7 +215,7 @@
     link.click();
   }
 
-  // Cargar mapa inicial
+  // Carga inicial
   loadModel(modeloActual);
 </script>
 
